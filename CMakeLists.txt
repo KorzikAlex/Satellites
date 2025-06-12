@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core Network)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Core Network Svg)
 include_directories("include" , "src")
 
 set(PROJECT_SOURCES
@@ -26,7 +26,6 @@ if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
             ${PROJECT_SOURCES}
             src/Utils/TleParser.hpp
             src/Utils/TleParser.cpp
-            resources/icons/icon.png
     )
     # Define target properties for Android with Qt 6 as:
     #    set_property(TARGET Satellites APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

@@ -4,7 +4,10 @@
 #include <QRegularExpression>
 #include <QTextStream>
 
-TleParser::TleParser(QObject *parent): QObject(parent), networkManager_(new QNetworkAccessManager(this)), currentReply_(nullptr)
+TleParser::TleParser(QObject *parent)
+    : QObject(parent)
+    , networkManager_(new QNetworkAccessManager(this))
+    , currentReply_(nullptr)
 {}
 
 TleParser::~TleParser()
@@ -13,9 +16,6 @@ TleParser::~TleParser()
         this->currentReply_->deleteLater();
 }
 
-// -----------------------------
-// Загрузка из файла
-// -----------------------------
 void TleParser::loadFromFile(const QString &filePath)
 {
     QFile file(filePath);
@@ -35,9 +35,6 @@ void TleParser::loadFromFile(const QString &filePath)
     emit parsingFinished();
 }
 
-// -----------------------------
-// Загрузка из сети
-// -----------------------------
 void TleParser::loadFromUrl(const QUrl &url)
 {
     if (!url.isValid()) {
@@ -58,9 +55,6 @@ void TleParser::loadFromUrl(const QUrl &url)
     connect(this->currentReply_, &QNetworkReply::finished, this, &TleParser::onNetworkReplyFinished);
 }
 
-// -----------------------------
-// Обработчик завершения сетевого запроса
-// -----------------------------
 void TleParser::onNetworkReplyFinished()
 {
     if (!this->currentReply_)
