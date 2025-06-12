@@ -10,11 +10,11 @@
 // Структура для хранения одного TLE-набора
 struct TleRecord
 {
-    QString name;
-    QString line1;
-    QString line2;
+    QString name; // Заголовок (имя спутника или объекта)
+    QString line1; // Первая строка TLE (начинается с '1 ')
+    QString line2; // Вторая строка TLE (начинается с '2 ')
 
-    // Несколько часто используемых полей из TLE (можно дополнять по необходимости)
+    // Поля из первой и второй строки TLE:
     int satelliteNumber;    // Номер спутника (из line1)
     QString classification; // Класс (например, 'U' — unclassified)
     QString intDesignator;  // Международный обозначитель (YYNNNPPP)
