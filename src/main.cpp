@@ -1,5 +1,4 @@
-#include "mainwindow.hpp"
-#include "include/TleParser.hpp"
+#include "UI/mainwindow.hpp"
 
 #include <QApplication>
 

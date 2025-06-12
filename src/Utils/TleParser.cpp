@@ -1,13 +1,14 @@
 #include "TleParser.hpp"
 
 #include <QFile>
-#include <QTextStream>
 #include <QRegularExpression>
+#include <QTextStream>
 
+TleParser::TleParser(QObject *parent): QObject(parent), networkManager_(new QNetworkAccessManager(this)), currentReply_(nullptr)
+{}
 
-TleParser::TleParser(QObject *parent): QObject(parent), networkManager_(new QNetworkAccessManager(this)), currentReply_(nullptr) {}
-
-TleParser::~TleParser() {
+TleParser::~TleParser()
+{
     if (this->currentReply_)
         this->currentReply_->deleteLater();
 }
@@ -54,8 +55,7 @@ void TleParser::loadFromUrl(const QUrl &url)
 
     QNetworkRequest request(url);
     currentReply_ = networkManager_->get(request);
-    connect(this->currentReply_, &QNetworkReply::finished,
-            this, &TleParser::onNetworkReplyFinished);
+    connect(this->currentReply_, &QNetworkReply::finished, this, &TleParser::onNetworkReplyFinished);
 }
 
 // -----------------------------
@@ -67,8 +67,7 @@ void TleParser::onNetworkReplyFinished()
         return;
 
     if (this->currentReply_->error() != QNetworkReply::NoError) {
-        QString errMsg = QString("Сетевая ошибка: %1")
-                             .arg(this->currentReply_->errorString());
+        QString errMsg = QString("Сетевая ошибка: %1").arg(this->currentReply_->errorString());
         this->currentReply_->deleteLater();
         this->currentReply_ = nullptr;
         emit errorOccurred(errMsg);
@@ -96,13 +95,12 @@ void TleParser::parseText(const QString &text)
     // Заметка: в некоторых файлах первая строка может быть заголовком или комментариями.
     // Здесь считаем, что каждая запись — это три подряд идущие непустые строки:
     //   [имя (опционально)], TLE-LINE1, TLE-LINE2
-    QStringList allLines = text.split(QRegularExpression("[\r\n]"),
-                                      Qt::SkipEmptyParts);
+    QStringList allLines = text.split(QRegularExpression("[\r\n]"), Qt::SkipEmptyParts);
 
     int i = 0;
     while (i + 1 < allLines.size()) {
         QString line1 = allLines.at(i).trimmed();
-        QString line2 = allLines.at(i+1).trimmed();
+        QString line2 = allLines.at(i + 1).trimmed();
         QString line3;
 
         // Если текущая строка не начинается с '1 ' (TLE Line1) или следующая не '2 ',
@@ -113,28 +111,28 @@ void TleParser::parseText(const QString &text)
         // и ставим пустое имя, а сам TLE — это line1 и line2.
         QString name;
         if (line1.startsWith('1') && line1.size() > 1 && line1.at(1).isSpace()
-            && line2.startsWith('2') && line2.size() > 1 && line2.at(1).isSpace())
-        {
-            name = QString();               // Нет явного имени
-            line3 = QString();              // не используется
+            && line2.startsWith('2') && line2.size() > 1 && line2.at(1).isSpace()) {
+            name = QString();  // Нет явного имени
+            line3 = QString(); // не используется
             // Текущие line1,line2 — это TLE.
             QString tleLine1 = line1;
             QString tleLine2 = line2;
             TleRecord rec;
             QString err;
-            if (this->parseSingleTle(name, tleLine1, tleLine2, rec, err)) this->records_.append(rec);
+            if (this->parseSingleTle(name, tleLine1, tleLine2, rec, err))
+                this->records_.append(rec);
             i += 2;
-        }
-        else {
+        } else {
             // Предполагаем, что line1 — это имя
             name = line1;
             if (i + 2 >= allLines.size())
                 break; // нет полноценного TLE после имени
-            QString tleLine1 = allLines.at(i+1).trimmed();
-            QString tleLine2 = allLines.at(i+2).trimmed();
+            QString tleLine1 = allLines.at(i + 1).trimmed();
+            QString tleLine2 = allLines.at(i + 2).trimmed();
             TleRecord rec;
             QString err;
-            if (this->parseSingleTle(name, tleLine1, tleLine2, rec, err)) this->records_.append(rec);
+            if (this->parseSingleTle(name, tleLine1, tleLine2, rec, err))
+                this->records_.append(rec);
             i += 3;
         }
     }
@@ -257,4 +255,3 @@ QVector<TleRecord> TleParser::records() const
 {
     return records_;
 }
-

@@ -1,9 +1,9 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <QMainWindow>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QMainWindow>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
