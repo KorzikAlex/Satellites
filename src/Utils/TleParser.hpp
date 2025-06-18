@@ -1,3 +1,12 @@
+/*!
+ * \file TleParser.hpp
+ * \brief Заголовочный файл для класса TleParser.
+ * \author KorzikAlex
+ * \copyright This project is released under the MIT License.
+ * \details
+ * Этот файл содержит определение класса TleParser, который предназначен для
+ * чтения и разбора TLE (Two-Line Element) данных из файлов или URL.
+ */
 #ifndef TLEPARSER_HPP
 #define TLEPARSER_HPP
 
@@ -7,10 +16,25 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
-// Структура для хранения одного TLE-набора
+/*!
+ * \brief Структура TleRecord
+ * \details
+ * Хранит данные одной записи TLE (Two-Line Element).
+ * Содержит поля для имени спутника, двух строк TLE и
+ * различных параметров, таких как
+ * номер спутника, классификация,
+ * международный обозначитель,
+ * эпоха, среднее движение,
+ * наклонение, эксцентриситет,
+ * долгота восходящего узла,
+ * аргумент перигея и средняя аномалия.
+ * Эти данные используются для
+ * определения орбиты спутника
+ * или другого объекта в космосе.
+ */
 struct TleRecord
 {
-    QString name; // Заголовок (имя спутника или объекта)
+    QString name;  // Заголовок (имя спутника или объекта)
     QString line1; // Первая строка TLE (начинается с '1 ')
     QString line2; // Вторая строка TLE (начинается с '2 ')
 
@@ -33,27 +57,22 @@ class TleParser : public QObject
     Q_OBJECT
 
 public:
-    /**
+    /*!
      * \brief TleParser — конструктор класса TleParser
      * \param parent Родитель объекта (обычно nullptr)
      */
     explicit TleParser(QObject *parent = nullptr);
-    /**
+    /*!
      * \brief ~TleParser — деструктор класса TleParser
+     * \details
      * Освобождает ресурсы, связанные с сетевыми запросами.
      */
     ~TleParser();
 
     /**
-     * \brief loadFromFile — асинхронный метод для загрузки TLE из файла
-     * \param filePath Путь к файлу, содержащему TLE-записи
+     * @brief records
+     * @return
      */
-    Q_SLOT void loadFromFile(const QString &filePath);
-
-    // Асинхронный метод: загрузить TLE из URL (http://... / https://...)
-    Q_SLOT void loadFromUrl(const QUrl &url);
-
-    // Возвращает последний разобранный список записей
     QVector<TleRecord> records() const;
 
 signals:
@@ -62,6 +81,10 @@ signals:
 
     // Сигнал, если произошла ошибка (например, не удалось открыть файл или сеть)
     void errorOccurred(const QString &message);
+
+public slots:
+    void loadFromFile(const QString &filePath);
+    void loadFromUrl(const QUrl &url);
 
 private slots:
     // Обработчики для завершения сетевого запроса

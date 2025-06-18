@@ -25,7 +25,7 @@ void TleParser::loadFromFile(const QString &filePath)
     }
 
     QTextStream in(&file);
-    // in.setCodec("UTF-8"); // Предполагаем UTF-8, при необходимости можно убрать или сделать гибче
+    // in.setEncoding("UTF-8");
 
     QString allText = in.readAll();
     file.close();

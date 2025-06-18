@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/light_icons">
+        <file>icons/cloud_download_light.svg</file>
+        <file>icons/info_light.svg</file>
+        <file>icons/upload_light.svg</file>
+    </qresource>
+    <qresource prefix="/dark_icons">
+        <file>icons/cloud_download_dark.svg</file>
+        <file>icons/info_dark.svg</file>
+        <file>icons/upload_dark.svg</file>
+    </qresource>
+</RCC>

@@ -9,15 +9,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>300</width>
-    <height>300</height>
+    <width>260</width>
+    <height>200</height>
    </rect>
   </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
+  <property name="minimumSize">
+   <size>
+    <width>260</width>
+    <height>200</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>400</width>
+    <height>400</height>
+   </size>
   </property>
   <property name="font">
    <font>
@@ -40,8 +46,11 @@
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <property name="toolButtonStyle">
-   <enum>Qt::ToolButtonStyle::ToolButtonIconOnly</enum>
+   <enum>Qt::ToolButtonStyle::ToolButtonTextUnderIcon</enum>
   </property>
   <property name="tabShape">
    <enum>QTabWidget::TabShape::Rounded</enum>
@@ -54,7 +63,7 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QPushButton" name="FilePushButton">
+       <widget class="QPushButton" name="filePushButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -71,14 +80,17 @@
          <string comment="Загрузите локальный TLE файл" extracomment="Загрузите локальный TLE файл">Загрузка из файла</string>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>../../resources/icons/upload.svg</normaloff>../../resources/icons/upload.svg</iconset>
+         <iconset resource="../../resources/mainwindow.qrc">
+          <normaloff>:/light_icons/icons/upload_light.svg</normaloff>:/light_icons/icons/upload_light.svg</iconset>
         </property>
         <property name="iconSize">
          <size>
           <width>30</width>
           <height>30</height>
          </size>
+        </property>
+        <property name="shortcut">
+         <string>Ctrl+O</string>
         </property>
         <property name="checkable">
          <bool>false</bool>
@@ -89,7 +101,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="UrlPushButton">
+       <widget class="QPushButton" name="urlPushButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -105,8 +117,8 @@
          <string comment="Загрузите TLE файл из сетевого источника" extracomment="Загрузите TLE файл из сетевого источника">Загрузка из сети</string>
         </property>
         <property name="icon">
-         <iconset>
-          <normaloff>../../resources/icons/cloud_download.svg</normaloff>../../resources/icons/cloud_download.svg</iconset>
+         <iconset resource="../../resources/mainwindow.qrc">
+          <normaloff>:/light_icons/icons/cloud_download_light.svg</normaloff>:/light_icons/icons/cloud_download_light.svg</iconset>
         </property>
         <property name="iconSize">
          <size>
@@ -140,7 +152,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>300</width>
+     <width>260</width>
      <height>25</height>
     </rect>
    </property>
@@ -162,47 +174,49 @@
     <property name="toolTipsVisible">
      <bool>false</bool>
     </property>
-    <addaction name="FileAction"/>
-    <addaction name="UrlAction"/>
+    <addaction name="fileAction"/>
+    <addaction name="urlAction"/>
    </widget>
    <widget class="QMenu" name="InfoMenu">
     <property name="title">
      <string>Справка</string>
     </property>
-    <addaction name="AboutProgrammAction"/>
+    <addaction name="aboutProgrammAction"/>
    </widget>
    <addaction name="FileMenu"/>
    <addaction name="InfoMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="FileAction">
+  <action name="fileAction">
    <property name="icon">
-    <iconset>
-     <normaloff>../../resources/icons/upload.svg</normaloff>../../resources/icons/upload.svg</iconset>
+    <iconset resource="../../resources/mainwindow.qrc">
+     <normaloff>:/light_icons/icons/upload_light.svg</normaloff>:/light_icons/icons/upload_light.svg</iconset>
    </property>
    <property name="text">
     <string>Загрузка из файла</string>
    </property>
   </action>
-  <action name="UrlAction">
+  <action name="urlAction">
    <property name="icon">
-    <iconset>
-     <normaloff>../../resources/icons/cloud_download.svg</normaloff>../../resources/icons/cloud_download.svg</iconset>
+    <iconset resource="../../resources/mainwindow.qrc">
+     <normaloff>:/light_icons/icons/cloud_download_light.svg</normaloff>:/light_icons/icons/cloud_download_light.svg</iconset>
    </property>
    <property name="text">
     <string>Загрузка из сети</string>
    </property>
   </action>
-  <action name="AboutProgrammAction">
+  <action name="aboutProgrammAction">
    <property name="icon">
-    <iconset>
-     <normaloff>../../resources/icons/info.svg</normaloff>../../resources/icons/info.svg</iconset>
+    <iconset resource="../../resources/mainwindow.qrc">
+     <normaloff>:/light_icons/icons/info_light.svg</normaloff>:/light_icons/icons/info_light.svg</iconset>
    </property>
    <property name="text">
     <string>О программе</string>
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../resources/mainwindow.qrc"/>
+ </resources>
  <connections/>
 </ui>
