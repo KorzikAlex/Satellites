@@ -1,7 +1,7 @@
 #include "infowindow.hpp"
 #include "ui_infowindow.h"
 
-InfoWindow::InfoWindow(QWidget *parent)
+InfoWindow::InfoWindow(const QList<TleRecord> &records, QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::InfoWindow)
 {

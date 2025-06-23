@@ -9,4 +9,7 @@
         <file>icons/info_dark.svg</file>
         <file>icons/upload_dark.svg</file>
     </qresource>
+    <qresource prefix="/title_icon">
+        <file>icons/icon.svg</file>
+    </qresource>
 </RCC>

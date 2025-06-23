@@ -13,23 +13,35 @@
 
 void MainWindow::openLocalFile()
 {
+    qInfo() << "openLocalFile called";
     // Инициализация TleParser
     TleParser TleParser_(this);
     QString filePath = QFileDialog::getOpenFileName(this,
                                                     tr("Открыть TLE файл"),
                                                     "",
                                                     tr("TLE файлы (*.txt *.tle)"));
-    if (!filePath.isEmpty())
+    qInfo() << "Selected file path:" << filePath;
+    if (!filePath.isEmpty()) {
         TleParser_.loadFromFile(filePath);
+        InfoWindow *infoWindow = new InfoWindow(TleParser_.records(), this);
+        infoWindow->setAttribute(Qt::WA_DeleteOnClose); // для автоматического удаления
+        infoWindow->show();
+    }
 }
 
 void MainWindow::openUrl()
 {
+    qInfo() << "openUrl called";
     // Инициализация TleParser
     TleParser TleParser_(this);
-    QString url = QInputDialog::getText(this, tr("Введите ссылку"), tr("TLE URL:"));
-    if (!url.isEmpty())
-        TleParser_.loadFromUrl(url);
+    QString urlPath = QInputDialog::getText(this, tr("Введите ссылку"), tr("TLE URL:"));
+    qInfo() << "Selected url path:" << urlPath;
+    if (!urlPath.isEmpty()) {
+        TleParser_.loadFromUrl(urlPath);
+        InfoWindow *infoWindow = new InfoWindow(TleParser_.records(), this);
+        infoWindow->setAttribute(Qt::WA_DeleteOnClose); // для автоматического удаления
+        infoWindow->show();
+    }
 }
 
 MainWindow::MainWindow(QWidget *parent)

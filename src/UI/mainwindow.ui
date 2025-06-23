@@ -34,8 +34,8 @@
    <string>Спутники</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>../../resources/icons/icon.svg</normaloff>../../resources/icons/icon.svg</iconset>
+   <iconset resource="../../resources/mainwindow.qrc">
+    <normaloff>:/title_icon/icons/icon.svg</normaloff>:/title_icon/icons/icon.svg</iconset>
   </property>
   <property name="whatsThis">
    <string/>
@@ -161,7 +161,7 @@
      <pointsize>9</pointsize>
     </font>
    </property>
-   <widget class="QMenu" name="FileMenu">
+   <widget class="QMenu" name="fileMenu">
     <property name="tearOffEnabled">
      <bool>false</bool>
     </property>
@@ -177,14 +177,14 @@
     <addaction name="fileAction"/>
     <addaction name="urlAction"/>
    </widget>
-   <widget class="QMenu" name="InfoMenu">
+   <widget class="QMenu" name="infoMenu">
     <property name="title">
      <string>Справка</string>
     </property>
     <addaction name="aboutProgrammAction"/>
    </widget>
-   <addaction name="FileMenu"/>
-   <addaction name="InfoMenu"/>
+   <addaction name="fileMenu"/>
+   <addaction name="infoMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="fileAction">
