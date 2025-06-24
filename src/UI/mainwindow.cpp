@@ -1,10 +1,12 @@
 /*!
- * \author KorzikAlex
- * \copyright This project is released under the MIT License.
  * \file mainwindow.cpp
  * \brief Исходный файл для главного окна приложения
  * \details
- * Этот файл содержит реализацию класса MainWindow, который представляет главное окно приложения.
+ * Этот файл содержит реализацию класса MainWindow,
+ * который представляет главное окно приложения.
+ * \author KorzikAlex
+ * \copyright This project is released under the MIT License.
+ * \date 2025
  */
 #include "mainwindow.hpp"
 #include "./ui_mainwindow.h"
@@ -13,14 +15,12 @@
 
 void MainWindow::openLocalFile()
 {
-    qInfo() << "openLocalFile called";
     // Инициализация TleParser
     TleParser TleParser_(this);
     QString filePath = QFileDialog::getOpenFileName(this,
                                                     tr("Открыть TLE файл"),
                                                     "",
                                                     tr("TLE файлы (*.txt *.tle)"));
-    qInfo() << "Selected file path:" << filePath;
     if (!filePath.isEmpty()) {
         TleParser_.loadFromFile(filePath);
         InfoWindow *infoWindow = new InfoWindow(TleParser_.records(), this);
@@ -31,11 +31,9 @@ void MainWindow::openLocalFile()
 
 void MainWindow::openUrl()
 {
-    qInfo() << "openUrl called";
     // Инициализация TleParser
     TleParser TleParser_(this);
     QString urlPath = QInputDialog::getText(this, tr("Введите ссылку"), tr("TLE URL:"));
-    qInfo() << "Selected url path:" << urlPath;
     if (!urlPath.isEmpty()) {
         TleParser_.loadFromUrl(urlPath);
         InfoWindow *infoWindow = new InfoWindow(TleParser_.records(), this);

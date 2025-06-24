@@ -1,10 +1,12 @@
 /*!
- * \author KorzikAlex
- * \copyright This project is released under the MIT License.
  * \file mainwindow.hpp
  * \brief Заголовочный файл для главного окна приложения
  * \details
- * Этот файл содержит определение класса MainWindow, который представляет главное окно приложения.
+ * Этот файл содержит определение класса MainWindow,
+ * который представляет главное окно приложения.
+ * \author KorzikAlex
+ * \copyright This project is released under the MIT License.
+ * \date 2025
  */
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
@@ -13,7 +15,6 @@
 #include <QInputDialog>
 #include <QMainWindow>
 #include <QMessageBox>
-#include <QDebug>
 
 #include "infowindow.hpp"
 

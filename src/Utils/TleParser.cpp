@@ -1,3 +1,14 @@
+/*!
+ * \file main.cpp
+ * \brief Парсер TLE-файлов
+ * \details
+ * Этот файл содержит реализацию класса TleParser,
+ * который используется для загрузки и разбора TLE-файлов
+ * или URL-адресов, содержащих TLE-данные.
+ * \author KorzikAlex
+ * \copyright This project is released under the MIT License.
+ * \date 2025
+ */
 #include "TleParser.hpp"
 
 #include <QFile>
@@ -25,7 +36,6 @@ void TleParser::loadFromFile(const QString &filePath)
     }
 
     QTextStream in(&file);
-    // in.setEncoding("UTF-8");
 
     QString allText = in.readAll();
     file.close();
@@ -80,171 +90,88 @@ void TleParser::onNetworkReplyFinished()
     emit parsingFinished();
 }
 
-// -----------------------------
-// Основной разбор текста
-// -----------------------------
-void TleParser::parseText(const QString &text)
+QVector<TleRecord> parseText(const QString &text, QString &err)
 {
-    // Разбиваем текст на строки, убираем пустые (по желанию)
-    // Заметка: в некоторых файлах первая строка может быть заголовком или комментариями.
-    // Здесь считаем, что каждая запись — это три подряд идущие непустые строки:
-    //   [имя (опционально)], TLE-LINE1, TLE-LINE2
-    QStringList allLines = text.split(QRegularExpression("[\r\n]"), Qt::SkipEmptyParts);
-
+    QVector<TleRecord> recs;
+    const auto lines = text.split('\n', Qt::SkipEmptyParts);
     int i = 0;
-    while (i + 1 < allLines.size()) {
-        QString line1 = allLines.at(i).trimmed();
-        QString line2 = allLines.at(i + 1).trimmed();
-        QString line3;
-
-        // Если текущая строка не начинается с '1 ' (TLE Line1) или следующая не '2 ',
-        // то предполагаем, что это имя, и тогда:
-        //    name = line1
-        //    line1 = allLines[i+1], line2 = allLines[i+2]
-        // Идём далее на +3. Иначе, если сразу line1='1 ' и line2='2 ', то имя может отсутствовать,
-        // и ставим пустое имя, а сам TLE — это line1 и line2.
-        QString name;
-        if (line1.startsWith('1') && line1.size() > 1 && line1.at(1).isSpace()
-            && line2.startsWith('2') && line2.size() > 1 && line2.at(1).isSpace()) {
-            name = QString();  // Нет явного имени
-            line3 = QString(); // не используется
-            // Текущие line1,line2 — это TLE.
-            QString tleLine1 = line1;
-            QString tleLine2 = line2;
-            TleRecord rec;
-            QString err;
-            if (this->parseSingleTle(name, tleLine1, tleLine2, rec, err))
-                this->records_.append(rec);
+    while (i + 1 < lines.size()) {
+        QString nameLine, l1, l2;
+        // Detect 3LE vs 2LE
+        if (lines[i].startsWith('1 ') || lines[i].startsWith('2 ')) {
+            // 2LE: no name line
+            nameLine.clear();
+            l1 = lines[i];
+            l2 = lines[i+1];
             i += 2;
         } else {
-            // Предполагаем, что line1 — это имя
-            name = line1;
-            if (i + 2 >= allLines.size())
-                break; // нет полноценного TLE после имени
-            QString tleLine1 = allLines.at(i + 1).trimmed();
-            QString tleLine2 = allLines.at(i + 2).trimmed();
-            TleRecord rec;
-            QString err;
-            if (this->parseSingleTle(name, tleLine1, tleLine2, rec, err))
-                this->records_.append(rec);
+            // 3LE: name + two lines
+            nameLine = lines[i];
+            l1 = (i+1 < lines.size() ? lines[i+1] : QString());
+            l2 = (i+2 < lines.size() ? lines[i+2] : QString());
             i += 3;
         }
+
+        TleRecord rec;
+        if (!parseSingleTle(nameLine, l1, l2, rec, err)) return {};
+        recs.append(rec);
     }
+    return recs;
 }
 
-// -----------------------------
-// Разбор одной записи TLE (две строки + опционально имя)
-// -----------------------------
+
 bool TleParser::parseSingleTle(const QString &nameLine,
                                const QString &l1,
                                const QString &l2,
                                TleRecord &outRecord,
                                QString &err)
 {
-    // Проверяем, что строки действительно начинаются с '1 ' и '2 '
-    if (!(l1.startsWith('1') && l1.size() > 1 && l1.at(1).isSpace())) {
-        err = QString("Первая строка TLE не начинается с '1 ': %1").arg(l1);
-        return false;
-    }
-    if (!(l2.startsWith('2') && l2.size() > 1 && l2.at(1).isSpace())) {
-        err = QString("Вторая строка TLE не начинается с '2 ': %1").arg(l2);
-        return false;
-    }
+    static const QRegularExpression re_1(R"(^(1) (\d{5})([UCS ]) (\d{2})(\d{3})([A-Z ]{1,3}) (\d{2})(\d\.{11}) ([+-]\d\.\d{8}) ([+- ]\d{5}[+- ]\d) ([+- ]\d{5}[+-]\d) ([0-4]) ([ \d]{4})(\d)$)");
+    static const QRegularExpression re_2(R"(^(2) (\d{5}) ([ \d]{3}\.[\d ]{4}) ([ \d]{3}\.[ \d]{4}) (\d{7}) ([ \d]{3}\.[\d ]{4}) ([ \d]{3}\.[\d ]{4}) ([ \d]{2}\.[\d ]{8})([ \d]{5})(\d)$)");
 
-    // Заполняем базовые поля
+    // Try match Line1
+    QRegularExpressionMatch m1 = re_1.match(l1);
+    if (!m1.hasMatch()) {
+        err = QStringLiteral("Line1 TLE format invalid");
+        return false;
+    }
+    // Try match Line2
+    QRegularExpressionMatch m2 = re_2.match(l2);
+    if (!m2.hasMatch()) {
+        err = QStringLiteral("Line2 TLE format invalid");
+        return false;
+    }
     outRecord.name = nameLine;
     outRecord.line1 = l1;
     outRecord.line2 = l2;
 
-    // Поля из первой строки (line1). Фиксированные позиции (индексы) взяты из стандарта:
-    // https://www.celestrak.com/columns/v02n03/ (или любой другой ТЛЕ-спецификации)
-    // Пример разбора (позиции 1-based):
-    // Количество символов в строке всегда >= 69, можно считать, что строка «правильного» размера.
+    outRecord.catalogNumber = m1.captured(2).toInt();
+    outRecord.classification = m1.captured(3).trimmed();
+    outRecord.intDesignator = m1.captured(4) + m1.captured(5) + m1.captured(6);
+    outRecord.yearLaunch = 1900 + m1.captured(4).toInt();
+    outRecord.numberLaunch = m1.captured(5).toInt();
+    outRecord.launchPiece = m1.captured(6).trimmed();
+    outRecord.epoch = m1.captured(7).toDouble();
+    outRecord.meanMotionFirstDerivative = m1.captured(8).toDouble();
+    outRecord.meanMotionSecondDerivative = m1.captured(9).toDouble();
+    outRecord.brakingCoefficient = m1.captured(10).trimmed();
+    outRecord.ephemerisType = m1.captured(11).toInt();
+    outRecord.elementSetNumber = m1.captured(12).trimmed().toInt();
+    outRecord.checksum1 = m1.captured(13).toInt();
 
-    // 1. Номер спутника [2–7]
-    bool ok = false;
-    QString satNumStr = l1.mid(2, 5).trimmed();
-    outRecord.satelliteNumber = satNumStr.toInt(&ok);
-    if (!ok) {
-        err = "Не удалось распарсить номер спутника (line1).";
-        return false;
-    }
-
-    // 2. Классификация [8]
-    outRecord.classification = l1.mid(7, 1);
-
-    // 3. Международный обозначитель [10–17]
-    outRecord.intDesignator = l1.mid(9, 8).trimmed();
-
-    // 4. Эпоха [19–32] (yyddd.dddddddd)
-    QString epochStr = l1.mid(18, 14).trimmed();
-    outRecord.epoch = epochStr.toDouble(&ok);
-    if (!ok) {
-        err = "Не удалось распарсить epoch (line1).";
-        return false;
-    }
-
-    // 5. Первая производная среднего движения [34–43] (не используем для упрощённого примера)
-
-    // 6. Вторая производная среднего движения и т.д. (не используем)
-
-    // Поля из второй строки (line2):
-    // 7. Инклинация [9–16] (в градусах)
-    QString inclStr = l2.mid(8, 8).trimmed();
-    outRecord.inclination = inclStr.toDouble(&ok);
-    if (!ok) {
-        err = "Не удалось распарсить inclination (line2).";
-        return false;
-    }
-
-    // 8. Долгота восходящего узла [18–25]
-    QString raanStr = l2.mid(17, 8).trimmed();
-    outRecord.raOfAscNode = raanStr.toDouble(&ok);
-    if (!ok) {
-        err = "Не удалось распарсить RA of Asc Node (line2).";
-        return false;
-    }
-
-    // 9. Эксцентриситет [27–33] (текст без десятичной точки, например "0006703" → 0.0006703)
-    QString eccStr = l2.mid(26, 7).trimmed();
-    // Добавляем «0.» перед строкой
-    QString eccDot = "0." + eccStr;
-    outRecord.eccentricity = eccDot.toDouble(&ok);
-    if (!ok) {
-        err = "Не удалось распарсить eccentricity (line2).";
-        return false;
-    }
-
-    // 10. Аргумент перигея [35–42]
-    QString argPerStr = l2.mid(34, 8).trimmed();
-    outRecord.argOfPerigee = argPerStr.toDouble(&ok);
-    if (!ok) {
-        err = "Не удалось распарсить Argument of Perigee (line2).";
-        return false;
-    }
-
-    // 11. Средняя аномалия [44–51]
-    QString mAnomalyStr = l2.mid(43, 8).trimmed();
-    outRecord.meanAnomaly = mAnomalyStr.toDouble(&ok);
-    if (!ok) {
-        err = "Не удалось распарсить Mean Anomaly (line2).";
-        return false;
-    }
-
-    // 12. Среднее движение [53–63] (rev/day)
-    QString mmStr = l2.mid(52, 11).trimmed();
-    outRecord.meanMotion = mmStr.toDouble(&ok);
-    if (!ok) {
-        err = "Не удалось распарсить Mean Motion (line2).";
-        return false;
-    }
+    outRecord.inclination = m2.captured(2).toDouble();
+    outRecord.rightAscension = m2.captured(3).toDouble();
+    QString ecc = m2.captured(4);
+    outRecord.eccentricity = QString("0.%1").arg(ecc).toDouble();
+    outRecord.argPerigee = m2.captured(5).toDouble();
+    outRecord.meanAnomaly = m2.captured(6).toDouble();
+    outRecord.meanMotion = m2.captured(7).toDouble();
+    outRecord.revolutionNumberOfEpoch = m2.captured(8).toInt();
+    outRecord.checksum2 = m2.captured(9).toInt();
 
     return true;
 }
 
-// -----------------------------
-// Получить разобранные записи
-// -----------------------------
 QVector<TleRecord> TleParser::records() const
 {
     return records_;

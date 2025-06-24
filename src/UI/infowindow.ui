@@ -19,42 +19,41 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0" colspan="2">
+       <widget class="QTableView" name="satelliteView"/>
+      </item>
       <item row="1" column="0">
-       <widget class="QTabWidget" name="tabWidget">
-        <property name="currentIndex">
-         <number>1</number>
+       <widget class="QComboBox" name="infoComboBox">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-        <property name="tabsClosable">
-         <bool>false</bool>
-        </property>
-        <property name="movable">
-         <bool>true</bool>
-        </property>
-        <widget class="QWidget" name="generalTab">
-         <property name="accessibleName">
-          <string/>
-         </property>
-         <attribute name="title">
+        <item>
+         <property name="text">
           <string>Общая информация</string>
-         </attribute>
-        </widget>
-        <widget class="QWidget" name="satelliteTab_1">
-         <attribute name="title">
-          <string>Спутник 1</string>
-         </attribute>
-        </widget>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="saveButton">
+        <property name="text">
+         <string>Сохранить в файл</string>
+        </property>
+        <property name="icon">
+         <iconset resource="../../resources/mainwindow.qrc">
+          <normaloff>:/light_icons/icons/file_save_light.svg</normaloff>:/light_icons/icons/file_save_light.svg</iconset>
+        </property>
+        <property name="shortcut">
+         <string>Ctrl+S</string>
+        </property>
        </widget>
       </item>
      </layout>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="pushButton">
-      <property name="text">
-       <string>Сохранить в файл</string>
-      </property>
-     </widget>
     </item>
    </layout>
   </widget>
@@ -87,21 +86,37 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="fileAction">
+   <property name="icon">
+    <iconset resource="../../resources/mainwindow.qrc">
+     <normaloff>:/light_icons/icons/upload_light.svg</normaloff>:/light_icons/icons/upload_light.svg</iconset>
+   </property>
    <property name="text">
     <string>Загрузить локальный файл</string>
    </property>
   </action>
   <action name="urlAction">
+   <property name="icon">
+    <iconset resource="../../resources/mainwindow.qrc">
+     <normaloff>:/light_icons/icons/cloud_download_light.svg</normaloff>:/light_icons/icons/cloud_download_light.svg</iconset>
+   </property>
    <property name="text">
     <string>Загрузить файл из сети</string>
    </property>
   </action>
   <action name="saveAction">
+   <property name="icon">
+    <iconset resource="../../resources/mainwindow.qrc">
+     <normaloff>:/light_icons/icons/file_save_light.svg</normaloff>:/light_icons/icons/file_save_light.svg</iconset>
+   </property>
    <property name="text">
     <string>Сохранить информацию в файл</string>
    </property>
   </action>
   <action name="aboutAction">
+   <property name="icon">
+    <iconset resource="../../resources/mainwindow.qrc">
+     <normaloff>:/light_icons/icons/info_light.svg</normaloff>:/light_icons/icons/info_light.svg</iconset>
+   </property>
    <property name="text">
     <string>О программе</string>
    </property>

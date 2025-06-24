@@ -54,7 +54,12 @@ struct TleRecord
     int checksum2; // Контрольная сумма (из line2)
 };
 
-// Класс TleParser — умеет читать из файла и из сети, выдаёт список TleRecord
+/*!
+ * \brief Класс TleParser
+ * \details
+ * Предназначен для загрузки и разбора TLE (Two-Line Element) данных
+ * из файлов или URL.
+ */
 class TleParser : public QObject
 {
     Q_OBJECT
