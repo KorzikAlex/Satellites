@@ -23,8 +23,8 @@
  */
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-    MainWindow initial_window;
-    initial_window.show();
-    return app.exec();
+    QApplication app(argc, argv); //! Создание экземпляра QApplication
+    MainWindow initial_window;    //! Создание главного окна приложения
+    initial_window.show();        //! Отображение главного окна
+    return app.exec();            //! Запуск главного цикла обработки событий приложения
 }

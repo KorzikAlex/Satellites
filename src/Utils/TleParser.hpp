@@ -10,6 +10,7 @@
 #ifndef TLEPARSER_HPP
 #define TLEPARSER_HPP
 
+#include <QDebug>
 #include <QObject>
 #include <QString>
 #include <QVector>
@@ -23,35 +24,35 @@
  */
 struct TleRecord
 {
-    // Поля для хранения данных TLE:
-    QString name;  // Заголовок (имя спутника или объекта)
-    QString line1; // Первая строка TLE (начинается с '1 ')
-    QString line2; // Вторая строка TLE (начинается с '2 ')
+    //! Поля для хранения данных TLE:
+    QString name;  //! Заголовок (имя спутника или объекта)
+    QString line1; //! Первая строка TLE (начинается с '1 ')
+    QString line2; //! Вторая строка TLE (начинается с '2 ')
 
-    // Поля из первой строки TLE:
-    int catalogNumber;         // Номер спутника (из line1)
-    QString classification;      // Класс (например, 'U' — unclassified)
-    QString intDesignator;       // Международный обозначитель (YYNNNPPP)
-    int yearLaunch;              // Год запуска (последние 2 цифры года)
-    int numberLaunch;            // Номер запуска (например, 001, 002 и т.д.)
-    QString launchPiece;         // Часть запуска (например, 'A', 'B' и т.д.)
-    double epoch;                // Эпоха в формате года + день года (например, 21234.12345678)
-    double meanMotionFirstDerivative; // Первая производная от среднего движения (rev/day^2)
-    double meanMotionSecondDerivative; // Вторая производная от среднего движения (rev/day^3)
-    QString brakingCoefficient;        // Коэффициент торможения B*
-    int ephemerisType;                 // Тип эфемерид
-    int elementSetNumber;                    // Номер элемента
-    int checksum1;                     // Контрольная сумма (из line1)
+    //! Поля из первой строки TLE:
+    int catalogNumber;      //! Номер спутника (из line1)
+    QString classification; //! Класс (например, 'U' — unclassified)
+    QString intDesignator;  //! Международный обозначитель (YYNNNPPP)
+    int yearLaunch;         //! Год запуска (последние 2 цифры года)
+    int numberLaunch;       //! Номер запуска (например, 001, 002 и т.д.)
+    QString launchPiece;    //! Часть запуска (например, 'A', 'B' и т.д.)
+    double epoch;           //! Эпоха в формате года + день года (например, 21234.12345678)
+    double meanMotionFirstDerivative;  //! Первая производная от среднего движения (rev/day^2)
+    double meanMotionSecondDerivative; //! Вторая производная от среднего движения (rev/day^3)
+    QString brakingCoefficient;        //! Коэффициент торможения B*
+    int ephemerisType;                 //! Тип эфемерид
+    int elementSetNumber;              //! Номер элемента
+    int checksum1;                     //! Контрольная сумма (из line1)
 
-    // Поля из второй строки TLE:
-    double inclination;  // Наклонение (градусы)
-    double rightAscension; // Долгота восходящего узла (градусы)
-    double eccentricity; // Эксцентриситет (но без точки, например, "0006703" → 0.0006703)
-    double argPerigee; // Аргумент перигея (градусы)
-    double meanAnomaly;  // Средняя аномалия (градусы)
-    double meanMotion; // Среднее движение (обращения в день)
-    int revolutionNumberOfEpoch; // Номер обращения (из line2)
-    int checksum2; // Контрольная сумма (из line2)
+    //! Поля из второй строки TLE:
+    double inclination;          //! Наклонение (градусы)
+    double rightAscension;       //! Долгота восходящего узла (градусы)
+    double eccentricity;         //! Эксцентриситет (но без точки, например, "0006703" → 0.0006703)
+    double argPerigee;           //! Аргумент перигея (градусы)
+    double meanAnomaly;          //! Средняя аномалия (градусы)
+    double meanMotion;           //! Среднее движение (обращения в день)
+    int revolutionNumberOfEpoch; //! Номер обращения (из line2)
+    int checksum2;               //! Контрольная сумма (из line2)
 };
 
 /*!
@@ -147,9 +148,7 @@ private:
     bool parseSingleTle(const QString &nameLine,
                         const QString &l1,
                         const QString &l2,
-                        TleRecord &outRecord,
-                        QString &err);
-
+                        TleRecord &outRecord);
     /*!
      * \brief networkManager_ - менеджер сетевых запросов
      * \details
@@ -162,7 +161,7 @@ private:
      * Это указатель на QNetworkReply, который используется для асинхронного получения данных.
      * Если запрос ещё не завершён, то currentReply_ не равен nullptr.
      */
-    QNetworkReply *currentReply_; // Хранит текущий QNetworkReply (или nullptr)
+    QNetworkReply *currentReply_;
     /*!
      * \brief records_ - хранит все разобранные TLE записи
      * \details

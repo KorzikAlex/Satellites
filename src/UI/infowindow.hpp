@@ -11,6 +11,7 @@
 #ifndef INFOWINDOW_HPP
 #define INFOWINDOW_HPP
 
+#include <QFileDialog>
 #include <QMainWindow>
 #include <QMessageBox>
 #include "Utils/TleParser.hpp"
@@ -39,13 +40,23 @@ public:
      * Освобождает ресурсы, используемые окном.
      */
     ~InfoWindow();
+public slots:
+    /*!
+     * \brief saveResults - слот для сохранения результатов в файл.
+     * \details
+     * Этот метод открывает диалоговое окно для выбора файла,
+     * в который будут сохранены результаты.
+     * После выбора файла, результаты сохраняются в указанный файл.
+     */
+    void saveResults();
 
 private:
     /*!
-     * \brief ui Указатель на пользовательский интерфейс, созданный с помощью Qt Designer.
+     * \brief ui_ Указатель на пользовательский интерфейс, созданный с помощью Qt Designer.
      * Используется для доступа к элементам интерфейса в классе InfoWindow.
      */
-    Ui::InfoWindow *ui;
+    Ui::InfoWindow *ui_;
+    QList<TleRecord> records_; /*!< Список записей TLE, которые будут отображаться в окне. */
 };
 
 #endif // INFOWINDOW_HPP

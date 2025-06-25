@@ -19,12 +19,6 @@
     <height>200</height>
    </size>
   </property>
-  <property name="maximumSize">
-   <size>
-    <width>400</width>
-    <height>400</height>
-   </size>
-  </property>
   <property name="font">
    <font>
     <pointsize>14</pointsize>
@@ -59,91 +53,87 @@
    <set>QMainWindow::DockOption::AllowTabbedDocks|QMainWindow::DockOption::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QPushButton" name="filePushButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string comment="Загрузите локальный TLE файл" extracomment="Загрузите локальный TLE файл">Загрузка из файла</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../../resources/mainwindow.qrc">
-          <normaloff>:/light_icons/icons/upload_light.svg</normaloff>:/light_icons/icons/upload_light.svg</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>30</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="shortcut">
-         <string>Ctrl+O</string>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="urlPushButton">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string comment="Загрузите TLE файл из сетевого источника" extracomment="Загрузите TLE файл из сетевого источника">Загрузка из сети</string>
-        </property>
-        <property name="icon">
-         <iconset resource="../../resources/mainwindow.qrc">
-          <normaloff>:/light_icons/icons/cloud_download_light.svg</normaloff>:/light_icons/icons/cloud_download_light.svg</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>30</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="checkable">
-         <bool>false</bool>
-        </property>
-        <property name="autoRepeat">
-         <bool>false</bool>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-        <property name="default">
-         <bool>false</bool>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QPushButton" name="filePushButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string comment="Загрузите локальный TLE файл" extracomment="Загрузите локальный TLE файл">Загрузка из файла</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../../resources/mainwindow.qrc">
+        <normaloff>:/light_icons/icons/upload_light.svg</normaloff>:/light_icons/icons/upload_light.svg</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>30</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="shortcut">
+       <string>Ctrl+O</string>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="urlPushButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string comment="Загрузите TLE файл из сетевого источника" extracomment="Загрузите TLE файл из сетевого источника">Загрузка из сети</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../../resources/mainwindow.qrc">
+        <normaloff>:/light_icons/icons/cloud_download_light.svg</normaloff>:/light_icons/icons/cloud_download_light.svg</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>30</width>
+        <height>30</height>
+       </size>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+      <property name="autoRepeat">
+       <bool>false</bool>
+      </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
+      <property name="default">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

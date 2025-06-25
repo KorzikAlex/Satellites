@@ -69,9 +69,10 @@ public slots:
 
 private:
     /*!
-     * \brief ui — Указатель на объект пользовательского интерфейса
+     * \brief ui_ — Указатель на объект пользовательского интерфейса
      * Содержит все элементы управления, созданные в Qt Designer.
      */
-    Ui::MainWindow *ui;
+    Ui::MainWindow *ui_;
 };
+
 #endif // MAINWINDOW_HPP
