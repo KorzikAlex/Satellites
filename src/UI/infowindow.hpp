@@ -14,6 +14,8 @@
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QTimer>
+#include <QStandardItemModel>
 #include "Utils/TleParser.hpp"
 
 namespace Ui {
@@ -49,14 +51,26 @@ public slots:
      * После выбора файла, результаты сохраняются в указанный файл.
      */
     void saveResults();
+    /*!
+     * \brief copyResults - слот для копирования результатов в буфер обмена.
+     * \details
+     * Этот метод копирует текстовое представление результатов в буфер обмена.
+     */
+    void copyResults();
 
 private:
     /*!
      * \brief ui_ Указатель на пользовательский интерфейс, созданный с помощью Qt Designer.
+     * \details
      * Используется для доступа к элементам интерфейса в классе InfoWindow.
      */
     Ui::InfoWindow *ui_;
-    QList<TleRecord> records_; /*!< Список записей TLE, которые будут отображаться в окне. */
+    /*!
+     * \brief records_ Список записей TLE, которые будут отображаться в окне.
+     * \details
+     * Содержит информацию о спутниках, полученную из TLE-файлов.
+     */
+    QList<TleRecord> records_;
 };
 
 #endif // INFOWINDOW_HPP

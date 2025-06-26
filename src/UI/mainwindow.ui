@@ -9,13 +9,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
+    <width>477</width>
     <height>200</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="minimumSize">
    <size>
-    <width>260</width>
+    <width>475</width>
     <height>200</height>
    </size>
   </property>
@@ -53,11 +59,11 @@
    <set>QMainWindow::DockOption::AllowTabbedDocks|QMainWindow::DockOption::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QPushButton" name="filePushButton">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -95,10 +101,22 @@
     <item>
      <widget class="QPushButton" name="urlPushButton">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>0</height>
+       </size>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
       </property>
       <property name="font">
        <font>
@@ -117,6 +135,9 @@
         <width>30</width>
         <height>30</height>
        </size>
+      </property>
+      <property name="shortcut">
+       <string>Ctrl+U</string>
       </property>
       <property name="checkable">
        <bool>false</bool>
@@ -142,7 +163,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>260</width>
+     <width>477</width>
      <height>25</height>
     </rect>
    </property>

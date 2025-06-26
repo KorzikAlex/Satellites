@@ -40,7 +40,7 @@ struct TleRecord
     double meanMotionFirstDerivative;  //! Первая производная от среднего движения (rev/day^2)
     double meanMotionSecondDerivative; //! Вторая производная от среднего движения (rev/day^3)
     QString brakingCoefficient;        //! Коэффициент торможения B*
-    int ephemerisType;                 //! Тип эфемерид
+    int ephemerisType;                 //! Тип эфемерид (обычно 0)
     int elementSetNumber;              //! Номер элемента
     int checksum1;                     //! Контрольная сумма (из line1)
 
@@ -51,7 +51,7 @@ struct TleRecord
     double argPerigee;           //! Аргумент перигея (градусы)
     double meanAnomaly;          //! Средняя аномалия (градусы)
     double meanMotion;           //! Среднее движение (обращения в день)
-    int revolutionNumberOfEpoch; //! Номер обращения (из line2)
+    int revolutionNumberOfEpoch; //! Номер обращения
     int checksum2;               //! Контрольная сумма (из line2)
 };
 

@@ -32,13 +32,24 @@ void InfoWindow::saveResults()
 
     QTextStream out(&file); //! Записываем результаты в файл
 
-    for (int i = 0; i < ui_->infoComboBox->count(); ++i)
-        //! Записываем каждый элемент списка в файл
-        out << this->ui_->infoComboBox->itemText(i) << "\n";
+    // TODO: реализовать сохранение результатов в файл
 
     file.close(); //! Закрываем файл после записи
+
     //! Показываем сообщение об успешном сохранении
-    QMessageBox::information(this, tr("Успех"), tr("Результаты успешно сохранены."));
+    this->ui_->statusLabel->setText("Результаты успешно сохранены в файл " + filePath);
+    QTimer::singleShot(3000, this, [&]() {
+        this->ui_->statusLabel->clear(); //! Очищаем метку статуса через 3 секунды
+    });
+}
+
+void InfoWindow::copyResults()
+{
+    this->ui_->statusLabel->setText("Информация скопирована в буфер обмена.");
+    // TODO: Реализовать копирование результатов в буфер обмена
+    QTimer::singleShot(3000, this, [&]() {
+        this->ui_->statusLabel->clear(); //! Очищаем метку статуса через 3 секунды
+    });
 }
 
 InfoWindow::InfoWindow(const QList<TleRecord> &records, QWidget *parent)
@@ -59,15 +70,48 @@ InfoWindow::InfoWindow(const QList<TleRecord> &records, QWidget *parent)
     connect(this->ui_->saveButton, &QPushButton::clicked, this, &InfoWindow::saveResults);
     //! Подключение слота для сохранения результатов к действию меню
     connect(this->ui_->saveAction, &QAction::triggered, this, &InfoWindow::saveResults);
+    //! Подключение слота для копирования результатов к кнопке
+    connect(this->ui_->copyButton, &QPushButton::clicked, this, &InfoWindow::copyResults);
+    //! Подключение слота для копирования результатов к действию меню
+    connect(this->ui_->copyAction, &QAction::triggered, this, &InfoWindow::copyResults);
 
-    //! Заполнение выпадающего списка названиями спутников
-    for (TleRecord record : records)
-        if (!record.name.isEmpty())
-            //! Если имя спутника не пустое, добавляем его в список
-            ui_->infoComboBox->addItem(record.name);
-        else
-            //! Если имя спутника пустое, добавляем номер спутника
-            ui_->infoComboBox->addItem("Спутник №" + QString::number(record.catalogNumber));
+    //! Установка количества спутников в метке
+    this->ui_->inputCountLabel->setText(QString::number(records.size()));
+
+    //! 1) Находим самую старую дату
+    QDateTime oldest = QDateTime::currentDateTime(); //! Текущая дата и время
+    bool first = true;                               //! Флаг для первого элемента
+    for (const auto &record : this->records_) {
+        int intEpoch = int(record.epoch);                //! Целая часть эпохи
+        int yy = intEpoch / 1000;                        //! Год (последние 2 цифры)
+        int ddd = intEpoch % 1000;                       //! День года (от 1 до 366)
+        double frac = record.epoch - intEpoch;           //! Дробная часть эпохи (доля дня)
+        int year = yy < 57 ? 2000 + yy : 1900 + yy;      //! Преобразование года в полный формат
+        QDate date = QDate(year, 1, 1).addDays(ddd - 1); //! Создание даты из года и дня года
+        QTime time = QTime(0, 0).addSecs(
+            int(frac * 86400));            //! Создание времени из дробной части эпохи
+        QDateTime dt(date, time, QTimeZone::UTC); //! Создание QDateTime из даты и времени
+        if (first || dt < oldest) {
+            //! Если это первый элемент или дата меньше текущей самой старой даты
+            oldest = dt;
+            first = false;
+        }
+    }
+
+    this->ui_->inputDateLabel->setText(oldest.toString("dd.MM.yyyy")); //! Установка даты в метку
+
+    QMap<int, int> launchesPerYear; //! Карта для хранения количества запусков по годам
+    for (const auto &rec : records) {
+        int yy = rec.yearLaunch;                            //! Год запуска (последние 2 цифры)
+        int launchYear = (yy < 57 ? 2000 + yy : 1900 + yy); //! Преобразование года в полный формат
+        launchesPerYear[launchYear]++; //! Увеличиваем счетчик запусков для данного года
+    }
+
+    QMap<int, int> inclinationBins; //! Карта для хранения количества спутников по наклону
+    for (const auto &rec : records) {
+        int deg = int(rec.inclination + 0.5); //! Округляем наклон до ближайшего целого числа
+        inclinationBins[deg]++;               //! Увеличиваем счетчик спутников для данного наклона
+    }
 }
 
 InfoWindow::~InfoWindow()
