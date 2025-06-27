@@ -48,6 +48,7 @@ void TleParser::loadFromFile(const QString &filePath)
 
 void TleParser::loadFromUrl(const QUrl &url)
 {
+    // FIXME: ПОЧИНИТЬ ФУНКЦИЮ ЗАГРУЗКИ ИЗ СЕТИ
     if (!url.isValid()) {
         //! Если URL недействителен, отправляем сигнал об ошибке
         emit this->errorOccurred("Неверный URL");
@@ -97,10 +98,10 @@ void TleParser::onNetworkReplyFinished()
 
 void TleParser::parseText(const QString &text)
 {
-    const auto lines
-        = text.split('\n',
-                     Qt::SkipEmptyParts); //! Разбиваем текст на строки, пропуская пустые строки
-    int i = 0;                            //! Индекс для перебора строк
+    // FIXME: ПРИВЕСТИ В ПОРЯДОК ПАРСИНГ ЛИНИЙ И ОТПРАВКИ ИНФОРМАЦИИ
+    //! Разбиваем текст на строки, пропуская пустые строки
+    const auto lines = text.split('\n', Qt::SkipEmptyParts);
+    int i = 0; //! Индекс для перебора строк
     while (i + 1 < lines.size()) {
         //! Проверяем, что текущая строка начинается с '1 ' или '2 '
         QString nameLine, l1, l2;
@@ -120,8 +121,9 @@ void TleParser::parseText(const QString &text)
         }
         TleRecord rec; //! Создаем новую запись TLE
         if (!parseSingleTle(nameLine, l1, l2, rec))
-            exit(1);                //! Если не удалось разобрать TLE, завершаем программу с ошибкой
-        this->records_.append(rec); //! Добавляем запись в список записей
+            continue; //! Если разбор не удался, пропускаем эту пару строк
+        else
+            this->records_.append(rec); //! Добавляем запись в список записей
     }
 }
 
@@ -148,14 +150,18 @@ bool TleParser::parseSingleTle(const QString &nameLine,
     outRecord.line1 = l1;      //! Записываем первую строку TLE
     outRecord.line2 = l2;      //! Записываем вторую строку TLE
 
+    if (!this->checkTleLine(l1) || !this->checkTleLine(l2))
+        return false; //! Если контрольные суммы не совпадают, возвращаем false
+
     outRecord.catalogNumber = m1.captured(2).toInt();    //! Записываем номер спутника
     outRecord.classification = m1.captured(3).trimmed(); //! Записываем классификацию спутника
     outRecord.intDesignator = m1.captured(4) + m1.captured(5)
-                              + m1.captured(6);           //! Записываем международное обзоначение
-    outRecord.yearLaunch = 1900 + m1.captured(4).toInt(); //! Записываем год запуска спутника
-    outRecord.numberLaunch = m1.captured(5).toInt();      //! Записываем номер запуска спутника
-    outRecord.launchPiece = m1.captured(6).trimmed();     //! Записываем часть запуска спутника
-    outRecord.epoch = m1.captured(7).toDouble();          //! Записываем эпоху спутника
+                              + m1.captured(6); //! Записываем международное обзоначение
+    outRecord.yearLaunch = m1.captured(4)
+                               .toInt(); //! Записываем год запуска спутника (последние 2 цифры)
+    outRecord.numberLaunch = m1.captured(5).toInt();  //! Записываем номер запуска спутника
+    outRecord.launchPiece = m1.captured(6).trimmed(); //! Записываем часть запуска спутника
+    outRecord.epoch = m1.captured(7).toDouble();      //! Записываем эпоху спутника
     outRecord.meanMotionFirstDerivative
         = m1.captured(8).toDouble(); //! Записываем первую производную от среднего движения
     outRecord.meanMotionSecondDerivative
@@ -165,20 +171,38 @@ bool TleParser::parseSingleTle(const QString &nameLine,
     outRecord.elementSetNumber = m1.captured(12).trimmed().toInt(); //! Записываем номер элемента
     outRecord.checksum1 = m1.captured(13).toInt(); //! Записываем контрольную сумму из первой строки
 
-    outRecord.inclination = m2.captured(2).toDouble(); //! Записываем наклонение спутника в градусах
-    outRecord.rightAscension = m2.captured(3)
+    outRecord.inclination = m2.captured(3).toDouble(); //! Записываем наклонение спутника в градусах
+    outRecord.rightAscension = m2.captured(4)
                                    .toDouble(); //! Записываем долготу восходящего узла в градусах
-    QString ecc = m2.captured(4);               //! Записываем эксцентриситет спутника (без точки)
+    QString ecc = m2.captured(5);               //! Записываем эксцентриситет спутника (без точки)
     outRecord.eccentricity
         = QString("0.%1").arg(ecc).toDouble(); //! Записываем эксцентриситет в формате с точкой
-    outRecord.argPerigee = m2.captured(5).toDouble();  //! Записываем аргумент перигея в градусах
-    outRecord.meanAnomaly = m2.captured(6).toDouble(); //! Записываем среднюю аномалию в градусах
-    outRecord.meanMotion = m2.captured(7)
+    outRecord.argPerigee = m2.captured(6).toDouble();  //! Записываем аргумент перигея в градусах
+    outRecord.meanAnomaly = m2.captured(7).toDouble(); //! Записываем среднюю аномалию в градусах
+    outRecord.meanMotion = m2.captured(8)
                                .toDouble(); //! Записываем среднее движение в обращениях в день
-    outRecord.revolutionNumberOfEpoch = m2.captured(8)
+    outRecord.revolutionNumberOfEpoch = m2.captured(9)
                                             .toInt(); //! Записываем номер витка на момент эпохи
-    outRecord.checksum2 = m2.captured(9).toInt(); //! Записываем контрольную сумму из второй строки
+    outRecord.checksum2 = m2.captured(10).toInt(); //! Записываем контрольную сумму из второй строки
     return true;
+}
+
+bool TleParser::checkTleLine(const QString &line) const
+{
+    bool ok;
+    int provided = line.right(1).toInt(&ok); //! последний символ
+    if (!ok)
+        return false; //! не цифра
+    int sum = 0;
+    for (int i = 0; i < line.length() - 1; ++i) {
+        QChar c = line[i]; //! берем символы строки, кроме последнего
+        if (c.isDigit())
+            sum += c.digitValue(); //! цифра дает свое значение
+        else if (c == QChar('-'))
+            sum += 1; //! минус дает 1
+        // остальные символы дают 0
+    }
+    return (sum % 10) == provided;
 }
 
 QVector<TleRecord> TleParser::records() const

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>950</width>
-    <height>600</height>
+    <width>960</width>
+    <height>540</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -18,9 +18,12 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>950</width>
-    <height>600</height>
+    <width>800</width>
+    <height>400</height>
    </size>
+  </property>
+  <property name="contextMenuPolicy">
+   <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>
   </property>
   <property name="windowTitle">
    <string>Информация о спутниках</string>
@@ -31,17 +34,35 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="3" column="3">
-     <widget class="QTableView" name="inclinationTableView">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+    <item row="6" column="0">
+     <widget class="QTableView" name="yearTableView">
+      <property name="contextMenuPolicy">
+       <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>
       </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Sunken</enum>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectionBehavior::SelectItems</enum>
+      </property>
+      <property name="gridStyle">
+       <enum>Qt::PenStyle::SolidLine</enum>
+      </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+       <bool>true</bool>
+      </attribute>
      </widget>
     </item>
-    <item row="6" column="0" colspan="4">
+    <item row="9" column="0" colspan="3">
      <widget class="QLabel" name="statusLabel">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -54,84 +75,46 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="0">
-     <widget class="QPushButton" name="copyButton">
+    <item row="6" column="2">
+     <widget class="QTableView" name="inclinationTableView">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="text">
-       <string>Скопировать всё</string>
+      <property name="contextMenuPolicy">
+       <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>
       </property>
-      <property name="icon">
-       <iconset resource="../../resources/mainwindow.qrc">
-        <normaloff>:/light_icons/icons/copy_all_light.svg</normaloff>:/light_icons/icons/copy_all_light.svg</iconset>
+      <property name="editTriggers">
+       <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
       </property>
-      <property name="shortcut">
-       <string>Ctrl+C</string>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectionBehavior::SelectItems</enum>
       </property>
+      <property name="sortingEnabled">
+       <bool>true</bool>
+      </property>
+      <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+       <bool>true</bool>
+      </attribute>
      </widget>
     </item>
-    <item row="2" column="3">
-     <widget class="QLabel" name="inclinationLabel">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Количество спутников с разным наклонением орбиты:</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="3">
-     <widget class="QLabel" name="inputCountLabel">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::Shape::NoFrame</enum>
-      </property>
-      <property name="text">
-       <string>0</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="dateLabel">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Дата самых старых данных:</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
+    <item row="5" column="0">
      <widget class="QLabel" name="yearLabel">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <bold>true</bold>
+       </font>
       </property>
       <property name="layoutDirection">
        <enum>Qt::LayoutDirection::LeftToRight</enum>
@@ -143,30 +126,14 @@
        <enum>QFrame::Shadow::Plain</enum>
       </property>
       <property name="text">
-       <string>Количество запущенных спутников по годам:</string>
+       <string>Количество спутников по годам:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="countLabel">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Кол-во спутников:</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="3">
+    <item row="3" column="2">
      <widget class="QLabel" name="inputDateLabel">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -188,14 +155,38 @@
       </property>
      </widget>
     </item>
-    <item row="3" column="0">
-     <widget class="QTableView" name="yearTableView">
-      <property name="gridStyle">
-       <enum>Qt::PenStyle::SolidLine</enum>
+    <item row="5" column="2">
+     <widget class="QLabel" name="inclinationLabel">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Количество спутников с разным наклонением орбиты:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="4" column="3">
+    <item row="5" column="1" rowspan="2">
+     <widget class="Line" name="vLine">
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Orientation::Vertical</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="2">
      <widget class="QPushButton" name="saveButton">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -210,8 +201,98 @@
        <iconset resource="../../resources/mainwindow.qrc">
         <normaloff>:/light_icons/icons/file_save_light.svg</normaloff>:/light_icons/icons/file_save_light.svg</iconset>
       </property>
-      <property name="shortcut">
-       <string>Ctrl+S</string>
+     </widget>
+    </item>
+    <item row="4" column="0" colspan="3">
+     <widget class="Line" name="hLine">
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Orientation::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QPushButton" name="copyButton">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Скопировать всё</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../../resources/mainwindow.qrc">
+        <normaloff>:/light_icons/icons/copy_all_light.svg</normaloff>:/light_icons/icons/copy_all_light.svg</iconset>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="countLabel">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Кол-во спутников:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QLabel" name="dateLabel">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Дата самых старых данных:</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QLabel" name="inputCountLabel">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::NoFrame</enum>
+      </property>
+      <property name="text">
+       <string>0</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
      </widget>
     </item>
@@ -222,7 +303,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>950</width>
+     <width>960</width>
      <height>25</height>
     </rect>
    </property>
@@ -230,8 +311,6 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="fileAction"/>
-    <addaction name="urlAction"/>
     <addaction name="separator"/>
     <addaction name="saveAction"/>
     <addaction name="copyAction"/>
@@ -254,6 +333,12 @@
    <property name="text">
     <string>Загрузить локальный файл</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+   <property name="shortcutVisibleInContextMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="urlAction">
    <property name="icon">
@@ -263,6 +348,9 @@
    <property name="text">
     <string>Загрузить файл из сети</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="saveAction">
    <property name="icon">
@@ -271,6 +359,12 @@
    </property>
    <property name="text">
     <string>Сохранить в файл</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ShortcutContext::WidgetShortcut</enum>
    </property>
   </action>
   <action name="aboutAction">
@@ -289,6 +383,9 @@
    </property>
    <property name="text">
     <string>Скопировать всё</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+C</string>
    </property>
   </action>
  </widget>

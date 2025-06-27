@@ -150,6 +150,14 @@ private:
                         const QString &l2,
                         TleRecord &outRecord);
     /*!
+     * \brief checkTleLile - проверка контрольной суммы TLE файла
+     * \param line - строка TLE, которую нужно проверить
+     * \return true, если контрольная сумма верна, иначе false
+     * \details
+     * Этот метод читает файл и проверяет контрольные суммы
+     */
+    bool checkTleLine(const QString &line) const;
+    /*!
      * \brief networkManager_ - менеджер сетевых запросов
      * \details
      * Этот объект используется для выполнения асинхронных сетевых запросов

@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>477</width>
+    <width>475</width>
     <height>200</height>
    </rect>
   </property>
@@ -87,9 +87,6 @@
         <height>30</height>
        </size>
       </property>
-      <property name="shortcut">
-       <string>Ctrl+O</string>
-      </property>
       <property name="checkable">
        <bool>false</bool>
       </property>
@@ -163,7 +160,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>477</width>
+     <width>475</width>
      <height>25</height>
     </rect>
    </property>
@@ -206,6 +203,9 @@
    <property name="text">
     <string>Загрузка из файла</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
   <action name="urlAction">
    <property name="icon">
@@ -214,6 +214,9 @@
    </property>
    <property name="text">
     <string>Загрузка из сети</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="aboutProgrammAction">
