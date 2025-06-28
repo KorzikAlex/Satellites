@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
 #endif
     QApplication app(argc, argv); //! Создание экземпляра QApplication
     app.setWindowIcon(QIcon(":/title_icon/icon.ico"));
-    MainWindow initial_window;    //! Создание главного окна приложения
-    initial_window.show();        //! Отображение главного окна
-    return app.exec();            //! Запуск главного цикла обработки событий приложения
+    MainWindow initial_window; //! Создание главного окна приложения
+    initial_window.show();     //! Отображение главного окна
+    return app.exec();         //! Запуск главного цикла обработки событий приложения
 }
