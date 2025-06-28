@@ -27,6 +27,7 @@ if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         src/Utils/TleParser.hpp
         src/Utils/TleParser.cpp
         resources/mainwindow.qrc
+        resources/icon.rc
         src/UI/infowindow.hpp src/UI/infowindow.cpp src/UI/infowindow.ui
     )
 # Define target properties for Android with Qt 6 as:

@@ -1,21 +1,28 @@
 <RCC>
     <qresource prefix="/light_icons">
-        <file>icons/cloud_download_light.svg</file>
-        <file>icons/info_light.svg</file>
-        <file>icons/upload_light.svg</file>
-        <file>icons/file_save_light.svg</file>
-        <file>icons/content_copy_light.svg</file>
-        <file>icons/copy_all_light.svg</file>
+        <file>icons/copy_all_light_32.svg</file>
+        <file>icons/save_light_24.svg</file>
+        <file>icons/save_light_32.svg</file>
+        <file>icons/upload_light_32.svg</file>
+        <file>icons/cloud_download_light_32.svg</file>
+        <file>icons/copy_all_light_24.svg</file>
+        <file>icons/cloud_download_light_24.svg</file>
+        <file>icons/upload_light_24.svg</file>
+        <file>icons/info_light_24.svg</file>
     </qresource>
     <qresource prefix="/dark_icons">
-        <file>icons/cloud_download_dark.svg</file>
-        <file>icons/info_dark.svg</file>
-        <file>icons/upload_dark.svg</file>
-        <file>icons/file_save_dark.svg</file>
-        <file>icons/content_copy_dark.svg</file>
-        <file>icons/copy_all_dark.svg</file>
+        <file>icons/copy_all_dark_32.svg</file>
+        <file>icons/save_dark_24.svg</file>
+        <file>icons/save_dark_32.svg</file>
+        <file>icons/upload_dark_32.svg</file>
+        <file>icons/cloud_download_dark_32.svg</file>
+        <file>icons/copy_all_dark_24.svg</file>
+        <file>icons/info_dark_24.svg</file>
+        <file>icons/cloud_download_dark_24.svg</file>
+        <file>icons/upload_dark_24.svg</file>
     </qresource>
     <qresource prefix="/title_icon">
         <file>icons/icon.svg</file>
+        <file>icons/icon.ico</file>
     </qresource>
 </RCC>

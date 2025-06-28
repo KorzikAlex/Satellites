@@ -79,12 +79,12 @@
       </property>
       <property name="icon">
        <iconset resource="../../resources/mainwindow.qrc">
-        <normaloff>:/light_icons/icons/upload_light.svg</normaloff>:/light_icons/icons/upload_light.svg</iconset>
+        <normaloff>:/light_icons/icons/upload_light_32.svg</normaloff>:/light_icons/icons/upload_light_32.svg</iconset>
       </property>
       <property name="iconSize">
        <size>
-        <width>30</width>
-        <height>30</height>
+        <width>32</width>
+        <height>32</height>
        </size>
       </property>
       <property name="checkable">
@@ -125,12 +125,12 @@
       </property>
       <property name="icon">
        <iconset resource="../../resources/mainwindow.qrc">
-        <normaloff>:/light_icons/icons/cloud_download_light.svg</normaloff>:/light_icons/icons/cloud_download_light.svg</iconset>
+        <normaloff>:/light_icons/icons/cloud_download_light_32.svg</normaloff>:/light_icons/icons/cloud_download_light_32.svg</iconset>
       </property>
       <property name="iconSize">
        <size>
-        <width>30</width>
-        <height>30</height>
+        <width>32</width>
+        <height>32</height>
        </size>
       </property>
       <property name="shortcut">
@@ -198,7 +198,7 @@
   <action name="fileAction">
    <property name="icon">
     <iconset resource="../../resources/mainwindow.qrc">
-     <normaloff>:/light_icons/icons/upload_light.svg</normaloff>:/light_icons/icons/upload_light.svg</iconset>
+     <normaloff>:/light_icons/icons/upload_light_24.svg</normaloff>:/light_icons/icons/upload_light_24.svg</iconset>
    </property>
    <property name="text">
     <string>Загрузка из файла</string>
@@ -210,7 +210,7 @@
   <action name="urlAction">
    <property name="icon">
     <iconset resource="../../resources/mainwindow.qrc">
-     <normaloff>:/light_icons/icons/cloud_download_light.svg</normaloff>:/light_icons/icons/cloud_download_light.svg</iconset>
+     <normaloff>:/light_icons/icons/cloud_download_light_24.svg</normaloff>:/light_icons/icons/cloud_download_light_24.svg</iconset>
    </property>
    <property name="text">
     <string>Загрузка из сети</string>
@@ -222,7 +222,7 @@
   <action name="aboutProgrammAction">
    <property name="icon">
     <iconset resource="../../resources/mainwindow.qrc">
-     <normaloff>:/light_icons/icons/info_light.svg</normaloff>:/light_icons/icons/info_light.svg</iconset>
+     <normaloff>:/light_icons/icons/info_light_24.svg</normaloff>:/light_icons/icons/info_light_24.svg</iconset>
    </property>
    <property name="text">
     <string>О программе</string>

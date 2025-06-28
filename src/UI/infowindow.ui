@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>960</width>
-    <height>540</height>
+    <width>982</width>
+    <height>553</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -55,10 +55,10 @@
        <enum>Qt::PenStyle::SolidLine</enum>
       </property>
       <property name="sortingEnabled">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-       <bool>true</bool>
+       <bool>false</bool>
       </attribute>
      </widget>
     </item>
@@ -69,6 +69,11 @@
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
       </property>
       <property name="text">
        <string/>
@@ -96,10 +101,10 @@
        <enum>QAbstractItemView::SelectionBehavior::SelectItems</enum>
       </property>
       <property name="sortingEnabled">
-       <bool>true</bool>
+       <bool>false</bool>
       </property>
       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-       <bool>true</bool>
+       <bool>false</bool>
       </attribute>
      </widget>
     </item>
@@ -113,6 +118,7 @@
       </property>
       <property name="font">
        <font>
+        <pointsize>10</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -141,6 +147,11 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="frameShape">
        <enum>QFrame::Shape::NoFrame</enum>
       </property>
@@ -165,6 +176,7 @@
       </property>
       <property name="font">
        <font>
+        <pointsize>10</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -194,12 +206,24 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <bold>false</bold>
+       </font>
+      </property>
       <property name="text">
        <string>Сохранить в файл</string>
       </property>
       <property name="icon">
        <iconset resource="../../resources/mainwindow.qrc">
-        <normaloff>:/light_icons/icons/file_save_light.svg</normaloff>:/light_icons/icons/file_save_light.svg</iconset>
+        <normaloff>:/light_icons/icons/save_light_32.svg</normaloff>:/light_icons/icons/save_light_32.svg</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
       </property>
      </widget>
     </item>
@@ -223,6 +247,7 @@
       </property>
       <property name="font">
        <font>
+        <pointsize>14</pointsize>
         <bold>false</bold>
        </font>
       </property>
@@ -231,7 +256,13 @@
       </property>
       <property name="icon">
        <iconset resource="../../resources/mainwindow.qrc">
-        <normaloff>:/light_icons/icons/copy_all_light.svg</normaloff>:/light_icons/icons/copy_all_light.svg</iconset>
+        <normaloff>:/light_icons/icons/copy_all_light_32.svg</normaloff>:/light_icons/icons/copy_all_light_32.svg</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>32</width>
+        <height>32</height>
+       </size>
       </property>
      </widget>
     </item>
@@ -245,6 +276,7 @@
       </property>
       <property name="font">
        <font>
+        <pointsize>10</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -266,6 +298,7 @@
       </property>
       <property name="font">
        <font>
+        <pointsize>10</pointsize>
         <bold>true</bold>
        </font>
       </property>
@@ -285,6 +318,11 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
       <property name="frameShape">
        <enum>QFrame::Shape::NoFrame</enum>
       </property>
@@ -303,7 +341,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>960</width>
+     <width>982</width>
      <height>25</height>
     </rect>
    </property>
@@ -312,8 +350,8 @@
      <string>Файл</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="saveAction"/>
     <addaction name="copyAction"/>
+    <addaction name="saveAction"/>
    </widget>
    <widget class="QMenu" name="infoMenu">
     <property name="title">
@@ -327,7 +365,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="fileAction">
    <property name="icon">
-    <iconset resource="../../resources/mainwindow.qrc">
+    <iconset>
      <normaloff>:/light_icons/icons/upload_light.svg</normaloff>:/light_icons/icons/upload_light.svg</iconset>
    </property>
    <property name="text">
@@ -342,7 +380,7 @@
   </action>
   <action name="urlAction">
    <property name="icon">
-    <iconset resource="../../resources/mainwindow.qrc">
+    <iconset>
      <normaloff>:/light_icons/icons/cloud_download_light.svg</normaloff>:/light_icons/icons/cloud_download_light.svg</iconset>
    </property>
    <property name="text">
@@ -355,7 +393,7 @@
   <action name="saveAction">
    <property name="icon">
     <iconset resource="../../resources/mainwindow.qrc">
-     <normaloff>:/light_icons/icons/file_save_light.svg</normaloff>:/light_icons/icons/file_save_light.svg</iconset>
+     <normaloff>:/light_icons/icons/save_light_24.svg</normaloff>:/light_icons/icons/save_light_24.svg</iconset>
    </property>
    <property name="text">
     <string>Сохранить в файл</string>
@@ -370,7 +408,7 @@
   <action name="aboutAction">
    <property name="icon">
     <iconset resource="../../resources/mainwindow.qrc">
-     <normaloff>:/light_icons/icons/info_light.svg</normaloff>:/light_icons/icons/info_light.svg</iconset>
+     <normaloff>:/light_icons/icons/info_light_24.svg</normaloff>:/light_icons/icons/info_light_24.svg</iconset>
    </property>
    <property name="text">
     <string>О программе</string>
@@ -379,7 +417,7 @@
   <action name="copyAction">
    <property name="icon">
     <iconset resource="../../resources/mainwindow.qrc">
-     <normaloff>:/light_icons/icons/copy_all_light.svg</normaloff>:/light_icons/icons/copy_all_light.svg</iconset>
+     <normaloff>:/light_icons/icons/copy_all_light_24.svg</normaloff>:/light_icons/icons/copy_all_light_24.svg</iconset>
    </property>
    <property name="text">
     <string>Скопировать всё</string>

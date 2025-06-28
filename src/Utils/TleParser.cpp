@@ -102,28 +102,30 @@ void TleParser::parseText(const QString &text)
     //! Разбиваем текст на строки, пропуская пустые строки
     const auto lines = text.split('\n', Qt::SkipEmptyParts);
     int i = 0; //! Индекс для перебора строк
+    int count = 0;
     while (i + 1 < lines.size()) {
         //! Проверяем, что текущая строка начинается с '1 ' или '2 '
-        QString nameLine, l1, l2;
+        QString nameLine, line1, line2;
         //! Проверка, что файл в формате 2LE или 3LE
         if (lines[i].startsWith("1 ") || lines[i].startsWith("2 ")) {
             //! 2LE формат
             nameLine.clear();  //! Если имя не указано, оставляем пустым
-            l1 = lines[i];     //! Первая строка TLE
-            l2 = lines[i + 1]; //! Вторая строка TLE
+            line1 = lines[i];     //! Первая строка TLE
+            line2 = lines[i + 1]; //! Вторая строка TLE
             i += 2;            //! Переходим к следующей паре строк
         } else {
             //! 3LE формат
             nameLine = lines[i];                                    //! Имя спутника или объекта
-            l1 = (i + 1 < lines.size() ? lines[i + 1] : QString()); //! Первая строка TLE
-            l2 = (i + 2 < lines.size() ? lines[i + 2] : QString()); //! Вторая строка TLE
+            line1 = (i + 1 < lines.size() ? lines[i + 1] : QString()); //! Первая строка TLE
+            line2 = (i + 2 < lines.size() ? lines[i + 2] : QString()); //! Вторая строка TLE
             i += 3; //! Переходим к следующей паре строк
         }
         TleRecord rec; //! Создаем новую запись TLE
-        if (!parseSingleTle(nameLine, l1, l2, rec))
+        if (!parseSingleTle(nameLine, line1, line2, rec))
             continue; //! Если разбор не удался, пропускаем эту пару строк
         else
             this->records_.append(rec); //! Добавляем запись в список записей
+        count += 1;
     }
 }
 

@@ -67,11 +67,14 @@ void InfoWindow::saveResults()
 
 void InfoWindow::copyResults()
 {
-    // TODO: Реализовать копирование результатов в буфер обмена
     QClipboard *clipboard = QApplication::clipboard(); //! Получаем буфер обмена
     QString results;                                   //! Строка для хранения результатов
+    //! Формируем текст результатов
+    //! Добавляем количество спутников
     results += tr("Количество спутников: %1\n").arg(this->records_.size());
-    results += tr("Дата самого старого спутника: %1\n").arg(this->ui_->inputDateLabel->text());
+    //! Добавляем дату самого старых данных
+    results += tr("Дата самых старых данных: %1\n").arg(this->ui_->inputDateLabel->text());
+    //! Добавляем количество запусков по годам и наклону
     results += tr("Количество запусков по годам:\n");
     for (int i = 0; i < this->ui_->yearTableView->model()->rowCount(); ++i) {
         QString year = this->ui_->yearTableView->model()->index(i, 0).data().toString();
@@ -98,7 +101,6 @@ InfoWindow::InfoWindow(const QList<TleRecord> &records, QWidget *parent)
     , ui_(new Ui::InfoWindow)
     , records_(records)
 {
-    // FIXME: ИСПРАВИТЬ СОРТИРОВКУ, ЧТОБЫ СОРТИРОВАЛОСЬ ПО ЧИСЛАМ
     this->ui_->setupUi(this); //! Инициализация пользовательского интерфейса
 
     //! Установка заголовка окна

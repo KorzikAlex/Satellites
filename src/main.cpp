@@ -23,6 +23,7 @@
  */
 int main(int argc, char *argv[])
 {
+    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv); //! Создание экземпляра QApplication
     MainWindow initial_window;    //! Создание главного окна приложения
     initial_window.show();        //! Отображение главного окна
