@@ -134,7 +134,11 @@ InfoWindow::InfoWindow(const QList<TleRecord> &records, QWidget *parent)
         QDate date = QDate(year, 1, 1).addDays(ddd - 1); //! Создание даты из года и дня года
         QTime time = QTime(0, 0).addSecs(
             int(frac * 86400));                   //! Создание времени из дробной части эпохи
+        #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        QDateTime dt(date, time, Qt::UTC); //! Создание QDateTime из даты и времени
+        #else
         QDateTime dt(date, time, QTimeZone::UTC); //! Создание QDateTime из даты и времени
+        #endif
         if (first || dt < oldest) {
             //! Если это первый элемент или дата меньше текущей самой старой даты
             oldest = dt;

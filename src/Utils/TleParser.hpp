@@ -10,10 +10,10 @@
 #ifndef TLEPARSER_HPP
 #define TLEPARSER_HPP
 
-#include <QDebug>
 #include <QObject>
 #include <QString>
 #include <QVector>
+#include <QUrl>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 

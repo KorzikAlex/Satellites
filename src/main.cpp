@@ -23,8 +23,12 @@
  */
 int main(int argc, char *argv[])
 {
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif
     QApplication app(argc, argv); //! Создание экземпляра QApplication
+    app.setWindowIcon(QIcon(":/title_icon/icon.ico"));
     MainWindow initial_window;    //! Создание главного окна приложения
     initial_window.show();        //! Отображение главного окна
     return app.exec();            //! Запуск главного цикла обработки событий приложения

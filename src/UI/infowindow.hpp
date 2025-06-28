@@ -12,12 +12,16 @@
 #define INFOWINDOW_HPP
 
 #include <QClipboard>
-#include <QDebug>
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QStandardItemModel>
 #include <QTimer>
+#include <QTimeZone>
+#include <QDateTime>
+#include <QDate>
+#include <QTime>
+
 #include "Utils/TleParser.hpp"
 
 namespace Ui {

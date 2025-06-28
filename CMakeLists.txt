@@ -18,17 +18,19 @@ set(PROJECT_SOURCES
     src/UI/mainwindow.cpp
     src/UI/mainwindow.hpp
     src/UI/mainwindow.ui
+    src/Utils/TleParser.hpp
+    src/Utils/TleParser.cpp
+    resources/mainwindow.qrc
+    resources/icon.rc
+    src/UI/infowindow.cpp
+    src/UI/infowindow.hpp
+    src/UI/infowindow.ui
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Satellites
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        src/Utils/TleParser.hpp
-        src/Utils/TleParser.cpp
-        resources/mainwindow.qrc
-        resources/icon.rc
-        src/UI/infowindow.hpp src/UI/infowindow.cpp src/UI/infowindow.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Satellites APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

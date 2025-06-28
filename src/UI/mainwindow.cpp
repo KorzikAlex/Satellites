@@ -25,7 +25,7 @@ void MainWindow::openLocalFile()
     if (!filePath.isEmpty()) {
         TleParser_.loadFromFile(filePath); //! Загружаем данные из файла
         //! Создаём окно информации
-        InfoWindow *infoWindow = new InfoWindow(TleParser_.records(), this);
+        InfoWindow *infoWindow = new InfoWindow(TleParser_.records().toList(), this);
         infoWindow->setAttribute(Qt::WA_DeleteOnClose); //! для автоматического удаления
         infoWindow->show();                             //! Показываем окно информации
     }
@@ -42,7 +42,7 @@ void MainWindow::openUrl()
     if (!urlPath.isEmpty()) {
         TleParser_.loadFromUrl(urlPath); //! Загружаем данные из URL
         //! Создаём окно информации
-        InfoWindow *infoWindow = new InfoWindow(TleParser_.records(), this);
+        InfoWindow *infoWindow = new InfoWindow(TleParser_.records().toList(), this);
         infoWindow->setAttribute(Qt::WA_DeleteOnClose); //! для автоматического удаления
         infoWindow->show();                             //! Показываем окно информации
     }
