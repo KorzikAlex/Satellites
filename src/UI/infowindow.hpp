@@ -12,15 +12,15 @@
 #define INFOWINDOW_HPP
 
 #include <QClipboard>
+#include <QDate>
+#include <QDateTime>
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QStandardItemModel>
-#include <QTimer>
-#include <QTimeZone>
-#include <QDateTime>
-#include <QDate>
 #include <QTime>
+#include <QTimeZone>
+#include <QTimer>
 
 #include "Utils/TleParser.hpp"
 
@@ -48,6 +48,7 @@ public:
      * Освобождает ресурсы, используемые окном.
      */
     ~InfoWindow();
+
 public slots:
     /*!
      * \brief saveResults - слот для сохранения результатов в файл.
@@ -63,6 +64,8 @@ public slots:
      * Этот метод копирует текстовое представление результатов в буфер обмена.
      */
     void copyResults();
+
+    void showAbout();
 
 private:
     /*!

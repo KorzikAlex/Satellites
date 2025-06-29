@@ -10,10 +10,17 @@
 #ifndef TLEPARSER_HPP
 #define TLEPARSER_HPP
 
+#include <QFile>
+#include <QFileInfo>
 #include <QObject>
+#include <QPair>
+#include <QRegularExpression>
 #include <QString>
-#include <QVector>
+#include <QStringList>
+#include <QTextStream>
 #include <QUrl>
+#include <QVector>
+#include <QDebug>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
@@ -32,7 +39,6 @@ struct TleRecord
     //! Поля из первой строки TLE:
     int catalogNumber;      //! Номер спутника (из line1)
     QString classification; //! Класс (например, 'U' — unclassified)
-    QString intDesignator;  //! Международный обозначитель (YYNNNPPP)
     int yearLaunch;         //! Год запуска (последние 2 цифры года)
     int numberLaunch;       //! Номер запуска (например, 001, 002 и т.д.)
     QString launchPiece;    //! Часть запуска (например, 'A', 'B' и т.д.)
@@ -54,6 +60,16 @@ struct TleRecord
     int revolutionNumberOfEpoch; //! Номер обращения
     int checksum2;               //! Контрольная сумма (из line2)
 };
+
+enum class ERROR_PARSING_CODE {
+    NO_ERROR,       //! Нет ошибки
+    INVALID_FORMAT, //! Неверный формат TLE
+    CHECKSUM_ERROR, //! Ошибка контрольной суммы
+    MISSING_LINES,  //! Отсутствуют строки TLE
+    UNKNOWN_ERROR   //! Неизвестная ошибка
+};
+
+typedef QPair<TleRecord, ERROR_PARSING_CODE> TleRecordPair;
 
 /*!
  * \brief Класс TleParser
@@ -84,6 +100,10 @@ public:
      */
     QVector<TleRecord> records() const;
 
+    bool loadFromFile(const QString &filePath);
+
+    bool loadFromUrl(const QUrl &url);
+
 signals:
     /*!
      * \brief parsingFinished
@@ -99,24 +119,6 @@ signals:
      * Этот сигнал используется для уведомления об ошибках,
      */
     void errorOccurred(const QString &message);
-
-public slots:
-    /*!
-     * \brief loadFromFile - загрузка TLE данных из файла
-     * \param filePath Путь к файлу, содержащему TLE данные.
-     * \details
-     * Этот метод читает содержимое файла, разбивает его на строки,
-     * и вызывает разбор текста для извлечения TLE записей.
-     */
-    void loadFromFile(const QString &filePath);
-    /*!
-     * \brief loadFromUrl - загрузка TLE данных из URL
-     * \param url Путь к URL, откуда нужно загрузить TLE данные.
-     * \details
-     * Этот метод выполняет сетевой запрос к указанному URL,
-     * получает ответ и вызывает разбор текста для извлечения TLE записей.
-     */
-    void loadFromUrl(const QUrl &url);
 
 private slots:
     /*!
@@ -134,7 +136,7 @@ private:
      * Этот метод разбивает текст на строки, проверяет их формат,
      * и вызывает разбор каждой пары строк TLE.
      */
-    void parseText(const QString &text);
+    bool parseText(const QString &text);
 
     /*!
      * \brief parseSingleTle - разбор одной записи TLE
@@ -149,6 +151,7 @@ private:
                         const QString &l1,
                         const QString &l2,
                         TleRecord &outRecord);
+
     /*!
      * \brief checkTleLile - проверка контрольной суммы TLE файла
      * \param line - строка TLE, которую нужно проверить
@@ -157,12 +160,14 @@ private:
      * Этот метод читает файл и проверяет контрольные суммы
      */
     bool checkTleLine(const QString &line) const;
+
     /*!
      * \brief networkManager_ - менеджер сетевых запросов
      * \details
      * Этот объект используется для выполнения асинхронных сетевых запросов
      */
     QNetworkAccessManager *networkManager_;
+
     /*!
      * \brief currentReply_ - хранит текущий сетевой ответ
      * \details
@@ -170,6 +175,7 @@ private:
      * Если запрос ещё не завершён, то currentReply_ не равен nullptr.
      */
     QNetworkReply *currentReply_;
+
     /*!
      * \brief records_ - хранит все разобранные TLE записи
      * \details

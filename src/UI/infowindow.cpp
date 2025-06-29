@@ -11,6 +11,13 @@
 #include "infowindow.hpp"
 #include "./ui_infowindow.h"
 
+void InfoWindow::showAbout()
+{
+    QMessageBox::about(this,
+                       tr("О программе"),
+                       tr("\"Спутники\" - это программа для работы с TLE-файлами."));
+}
+
 void InfoWindow::saveResults()
 {
     //! Открываем диалоговое окно для сохранения файла
@@ -74,13 +81,15 @@ void InfoWindow::copyResults()
     results += tr("Количество спутников: %1\n").arg(this->records_.size());
     //! Добавляем дату самого старых данных
     results += tr("Дата самых старых данных: %1\n").arg(this->ui_->inputDateLabel->text());
-    //! Добавляем количество запусков по годам и наклону
+
+    //! Добавляем количество запусков по годам
     results += tr("Количество запусков по годам:\n");
     for (int i = 0; i < this->ui_->yearTableView->model()->rowCount(); ++i) {
         QString year = this->ui_->yearTableView->model()->index(i, 0).data().toString();
         QString count = this->ui_->yearTableView->model()->index(i, 1).data().toString();
         results += tr("%1: %2\n").arg(year, count);
     }
+    //! Добавляем количество спутников по наклону
     results += tr("Количество спутников по наклону:\n");
     for (int i = 0; i < this->ui_->inclinationTableView->model()->rowCount(); ++i) {
         QString inclination = this->ui_->inclinationTableView->model()->index(i, 0).data().toString();
@@ -104,11 +113,7 @@ InfoWindow::InfoWindow(const QList<TleRecord> &records, QWidget *parent)
     this->ui_->setupUi(this); //! Инициализация пользовательского интерфейса
 
     //! Установка заголовка окна
-    this->connect(this->ui_->aboutAction, &QAction::triggered, this, [&]() {
-        QMessageBox::about(this,
-                           tr("О программе"),
-                           tr("\"Спутники\" - это программа для работы с TLE-файлами."));
-    });
+    this->connect(this->ui_->aboutAction, &QAction::triggered, this, &InfoWindow::showAbout);
 
     //! Подключение слота для сохранения результатов к кнопке
     connect(this->ui_->saveButton, &QPushButton::clicked, this, &InfoWindow::saveResults);
@@ -126,18 +131,20 @@ InfoWindow::InfoWindow(const QList<TleRecord> &records, QWidget *parent)
     QDateTime oldest = QDateTime::currentDateTime(); //! Текущая дата и время
     bool first = true;                               //! Флаг для первого элемента
     for (const auto &record : this->records_) {
-        int intEpoch = int(record.epoch);                //! Целая часть эпохи
-        int yy = intEpoch / 1000;                        //! Год (последние 2 цифры)
-        int ddd = intEpoch % 1000;                       //! День года (от 1 до 366)
-        double frac = record.epoch - intEpoch;           //! Дробная часть эпохи (доля дня)
-        int year = yy < 57 ? 2000 + yy : 1900 + yy;      //! Преобразование года в полный формат
-        QDate date = QDate(year, 1, 1).addDays(ddd - 1); //! Создание даты из года и дня года
-        QTime time = QTime(0, 0).addSecs(
-            int(frac * 86400)); //! Создание времени из дробной части эпохи
+        int intEpoch = int(record.epoch);      //! Целая часть эпохи
+        int yearSuffix = intEpoch / 1000;      //! Год (последние 2 цифры)
+        int day = intEpoch % 1000;             //! День года (от 1 до 366)
+        double frac = record.epoch - intEpoch; //! Дробная часть эпохи (доля дня)
+        //! Преобразование года в полный формат
+        int year = yearSuffix < 57 ? 2000 + yearSuffix : 1900 + yearSuffix;
+        QDate date = QDate(year, 1, 1).addDays(day - 1); //! Создание даты из года и дня года
+        //! Создание времени из дробной части эпохи
+        QTime time = QTime(0, 0).addSecs(int(frac * 86400));
+        //! Создание QDateTime из даты и времени
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-        QDateTime dt(date, time, Qt::UTC); //! Создание QDateTime из даты и времени
+        QDateTime dt(date, time, Qt::UTC);
 #else
-        QDateTime dt(date, time, QTimeZone::UTC); //! Создание QDateTime из даты и времени
+        QDateTime dt(date, time, QTimeZone::UTC);
 #endif
         if (first || dt < oldest) {
             //! Если это первый элемент или дата меньше текущей самой старой даты
@@ -150,8 +157,9 @@ InfoWindow::InfoWindow(const QList<TleRecord> &records, QWidget *parent)
 
     QMap<int, int> launchesPerYear; //! Карта для хранения количества запусков по годам
     for (const auto &rec : records) {
-        int yy = rec.yearLaunch;                          //! Год запуска (последние 2 цифры)
-        int launchYear = yy < 57 ? 2000 + yy : 1900 + yy; //! Преобразование года в полный формат
+        int yearSuffix = rec.yearLaunch; //! Год запуска (последние 2 цифры)
+        //! Преобразование года в полный формат
+        int launchYear = yearSuffix < 57 ? 2000 + yearSuffix : 1900 + yearSuffix;
         launchesPerYear[launchYear]++; //! Увеличиваем счетчик запусков для данного года
     }
 

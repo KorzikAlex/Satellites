@@ -66,6 +66,20 @@ public slots:
      * Слот, который вызывается при выборе URL для открытия.
      */
     void openUrl();
+    /*!
+     * \brief showInfo
+     * \param message Сообщение, которое будет отображено в окне информации
+     * \details
+     * Слот, который отображает информацию о программе.
+     */
+    void showError(const QString &message);
+
+    /*!
+     * \brief showAboutProgram - слот, который отображает информацию о программе
+     * \details
+     * Этот слот вызывается при выборе пункта меню "О программе".
+     */
+    void showAboutProgram();
 
 private:
     /*!
