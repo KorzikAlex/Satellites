@@ -11,11 +11,15 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
+#include <QEvent>
 #include <QFileDialog>
+#include <QGuiApplication>
 #include <QInputDialog>
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QStyleHints>
 
+#include "Utils/TleParser.hpp"
 #include "infowindow.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -66,6 +70,7 @@ public slots:
      * Слот, который вызывается при выборе URL для открытия.
      */
     void openUrl();
+
     /*!
      * \brief showInfo
      * \param message Сообщение, которое будет отображено в окне информации
@@ -75,11 +80,17 @@ public slots:
     void showError(const QString &message);
 
     /*!
-     * \brief showAboutProgram - слот, который отображает информацию о программе
+     * \brief showAbout - слот, который отображает информацию о программе
      * \details
      * Этот слот вызывается при выборе пункта меню "О программе".
      */
-    void showAboutProgram();
+    void showAbout();
+
+protected:
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    //! Переопределение метода для обновления стилей при смене темы
+    void changeEvent(QEvent *event) override;
+#endif
 
 private:
     /*!
@@ -87,6 +98,27 @@ private:
      * Содержит все элементы управления, созданные в Qt Designer.
      */
     Ui::MainWindow *ui_;
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    /*!
+     * \brief updateStyles - обновляет стили приложения при смене темы
+     * \details
+     * Этот метод вызывается при смене темы приложения
+     * и обновляет стили всех виджетов,
+     * чтобы они соответствовали новой теме.
+     */
+    void updateStyles();
+#endif
+    /*!
+     * \brief showInfoWindow - показывает окно с информацией о спутниках
+     * \param records Список записей TLE, которые будут отображаться в окне
+     * \details
+     * Этот метод создает новое окно с информацией о спутниках,
+     * используя данные из списка records.
+     */
+    void showInfoWindow(const QVector<TleRecord> &records);
+
+    TleParser *tleParser_ = nullptr;
 };
 
 #endif // MAINWINDOW_HPP

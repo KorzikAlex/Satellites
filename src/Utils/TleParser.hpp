@@ -10,6 +10,7 @@
 #ifndef TLEPARSER_HPP
 #define TLEPARSER_HPP
 
+#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QObject>
@@ -20,7 +21,6 @@
 #include <QTextStream>
 #include <QUrl>
 #include <QVector>
-#include <QDebug>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
@@ -43,6 +43,8 @@ struct TleRecord
     int numberLaunch;       //! Номер запуска (например, 001, 002 и т.д.)
     QString launchPiece;    //! Часть запуска (например, 'A', 'B' и т.д.)
     double epoch;           //! Эпоха в формате года + день года (например, 21234.12345678)
+    int epochYearSuffix;    //! Последние две цифры года эпохи (например, 21 для 2021 года)
+    double epochTime;       //! Дробная часть эпохи (доля дня, например, 0.12345678)
     double meanMotionFirstDerivative;  //! Первая производная от среднего движения (rev/day^2)
     double meanMotionSecondDerivative; //! Вторая производная от среднего движения (rev/day^3)
     QString brakingCoefficient;        //! Коэффициент торможения B*
@@ -60,16 +62,6 @@ struct TleRecord
     int revolutionNumberOfEpoch; //! Номер обращения
     int checksum2;               //! Контрольная сумма (из line2)
 };
-
-enum class ERROR_PARSING_CODE {
-    NO_ERROR,       //! Нет ошибки
-    INVALID_FORMAT, //! Неверный формат TLE
-    CHECKSUM_ERROR, //! Ошибка контрольной суммы
-    MISSING_LINES,  //! Отсутствуют строки TLE
-    UNKNOWN_ERROR   //! Неизвестная ошибка
-};
-
-typedef QPair<TleRecord, ERROR_PARSING_CODE> TleRecordPair;
 
 /*!
  * \brief Класс TleParser

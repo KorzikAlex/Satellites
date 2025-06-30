@@ -1,0 +1,28 @@
+<RCC>
+    <qresource prefix="/light_icons">
+        <file>cloud_download_light-24.svg</file>
+        <file>cloud_download_light-32.svg</file>
+        <file>copy_all_light-24.svg</file>
+        <file>copy_all_light-32.svg</file>
+        <file>info_light-24.svg</file>
+        <file>save_light-24.svg</file>
+        <file>save_light-32.svg</file>
+        <file>upload_light-24.svg</file>
+        <file>upload_light-32.svg</file>
+    </qresource>
+    <qresource prefix="/dark_icons">
+        <file>cloud_download_dark-24.svg</file>
+        <file>cloud_download_dark-32.svg</file>
+        <file>copy_all_dark-24.svg</file>
+        <file>copy_all_dark-32.svg</file>
+        <file>info_dark-24.svg</file>
+        <file>save_dark-24.svg</file>
+        <file>save_dark-32.svg</file>
+        <file>upload_dark-24.svg</file>
+        <file>upload_dark-32.svg</file>
+    </qresource>
+    <qresource prefix="/title_icon">
+        <file>icon.ico</file>
+        <file>icon.svg</file>
+    </qresource>
+</RCC>

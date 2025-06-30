@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>475</width>
-    <height>200</height>
+    <width>650</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,7 +22,7 @@
   <property name="minimumSize">
    <size>
     <width>475</width>
-    <height>200</height>
+    <height>150</height>
    </size>
   </property>
   <property name="font">
@@ -34,8 +34,8 @@
    <string>Спутники</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../../resources/mainwindow.qrc">
-    <normaloff>:/title_icon/icons/icon.svg</normaloff>:/title_icon/icons/icon.svg</iconset>
+   <iconset resource="../../resources/icons/window.qrc">
+    <normaloff>:/title_icon/icon.ico</normaloff>:/title_icon/icon.ico</iconset>
   </property>
   <property name="whatsThis">
    <string/>
@@ -78,8 +78,8 @@
        <string comment="Загрузите локальный TLE файл" extracomment="Загрузите локальный TLE файл">Загрузка из файла</string>
       </property>
       <property name="icon">
-       <iconset resource="../../resources/mainwindow.qrc">
-        <normaloff>:/light_icons/icons/upload_light_32.svg</normaloff>:/light_icons/icons/upload_light_32.svg</iconset>
+       <iconset resource="../../resources/icons/window.qrc">
+        <normaloff>:/light_icons/upload_light-32.svg</normaloff>:/light_icons/upload_light-32.svg</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -124,8 +124,8 @@
        <string comment="Загрузите TLE файл из сетевого источника" extracomment="Загрузите TLE файл из сетевого источника">Загрузка из сети</string>
       </property>
       <property name="icon">
-       <iconset resource="../../resources/mainwindow.qrc">
-        <normaloff>:/light_icons/icons/cloud_download_light_32.svg</normaloff>:/light_icons/icons/cloud_download_light_32.svg</iconset>
+       <iconset resource="../../resources/icons/window.qrc">
+        <normaloff>:/light_icons/cloud_download_light-32.svg</normaloff>:/light_icons/cloud_download_light-32.svg</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -155,50 +155,15 @@
     </item>
    </layout>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>475</width>
-     <height>25</height>
-    </rect>
+  <widget class="QStatusBar" name="statusbar">
+   <property name="sizeGripEnabled">
+    <bool>false</bool>
    </property>
-   <property name="font">
-    <font>
-     <pointsize>9</pointsize>
-    </font>
-   </property>
-   <widget class="QMenu" name="fileMenu">
-    <property name="tearOffEnabled">
-     <bool>false</bool>
-    </property>
-    <property name="title">
-     <string>Файл</string>
-    </property>
-    <property name="separatorsCollapsible">
-     <bool>false</bool>
-    </property>
-    <property name="toolTipsVisible">
-     <bool>false</bool>
-    </property>
-    <addaction name="fileAction"/>
-    <addaction name="urlAction"/>
-   </widget>
-   <widget class="QMenu" name="infoMenu">
-    <property name="title">
-     <string>Справка</string>
-    </property>
-    <addaction name="aboutProgrammAction"/>
-   </widget>
-   <addaction name="fileMenu"/>
-   <addaction name="infoMenu"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="fileAction">
    <property name="icon">
-    <iconset resource="../../resources/mainwindow.qrc">
-     <normaloff>:/light_icons/icons/upload_light_24.svg</normaloff>:/light_icons/icons/upload_light_24.svg</iconset>
+    <iconset resource="../../resources/icons/window.qrc">
+     <normaloff>:/light_icons/upload_light-24.svg</normaloff>:/light_icons/upload_light-24.svg</iconset>
    </property>
    <property name="text">
     <string>Загрузка из файла</string>
@@ -209,8 +174,8 @@
   </action>
   <action name="urlAction">
    <property name="icon">
-    <iconset resource="../../resources/mainwindow.qrc">
-     <normaloff>:/light_icons/icons/cloud_download_light_24.svg</normaloff>:/light_icons/icons/cloud_download_light_24.svg</iconset>
+    <iconset resource="../../resources/icons/window.qrc">
+     <normaloff>:/light_icons/cloud_download_light-24.svg</normaloff>:/light_icons/cloud_download_light-24.svg</iconset>
    </property>
    <property name="text">
     <string>Загрузка из сети</string>
@@ -219,10 +184,10 @@
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="aboutProgrammAction">
+  <action name="aboutAction">
    <property name="icon">
-    <iconset resource="../../resources/mainwindow.qrc">
-     <normaloff>:/light_icons/icons/info_light_24.svg</normaloff>:/light_icons/icons/info_light_24.svg</iconset>
+    <iconset resource="../../resources/icons/window.qrc">
+     <normaloff>:/light_icons/info_light-24.svg</normaloff>:/light_icons/info_light-24.svg</iconset>
    </property>
    <property name="text">
     <string>О программе</string>
@@ -230,7 +195,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../../resources/mainwindow.qrc"/>
+  <include location="../../resources/icons/window.qrc"/>
  </resources>
  <connections/>
 </ui>

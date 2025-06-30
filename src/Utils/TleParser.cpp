@@ -21,32 +21,29 @@ TleParser::~TleParser()
 {
     if (this->currentReply_)
         this->currentReply_->deleteLater();
-
 }
 
 bool TleParser::loadFromFile(const QString &filePath)
 {
-    //! Если путь к файлу пустой, отправляем сигнал об ошибке
-    if (filePath.isEmpty()) {
-        emit this->errorOccurred("Путь к файлу не указан!");
+    //! Проверяем, что путь к файлу не пустой
+    if (filePath.isEmpty())
         return false;
-    }
 
     QFileInfo info(filePath); //! Получаем информацию о файле по указанному пути
 
     //! Проверяем, существует ли файл
     if (!info.exists()) {
-        emit errorOccurred(tr("Файл «%1» не найден!").arg(filePath));
+        emit errorOccurred(tr("Файл \"%1\" не найден!").arg(filePath));
         return false;
     }
     //! Проверяем, является ли это файлом
     if (!info.isFile()) {
-        emit errorOccurred(tr("«%1» не является файлом!").arg(filePath));
+        emit errorOccurred(tr("\"%1\" не является файлом!").arg(filePath));
         return false;
     }
     //! Проверяем права доступа (на чтение)
     if (!info.isReadable()) {
-        emit errorOccurred(tr("Нет прав на чтение файла «%1»!").arg(filePath));
+        emit errorOccurred(tr("Нет прав на чтение файла \"%1\"!").arg(filePath));
         return false;
     }
     QFile file(filePath); //! Открываем файл для чтения
@@ -54,8 +51,8 @@ bool TleParser::loadFromFile(const QString &filePath)
     //! Проверяем, является ли файл текстовым
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         //! Если файл не удалось открыть, отправляем сигнал об ошибке
-        emit this->errorOccurred(QString("Не удалось открыть файл: %1").arg(filePath));
-        return -1;
+        emit this->errorOccurred(tr("Не удалось открыть файл \"%1\"").arg(filePath));
+        return false;
     }
 
     QString text = QTextStream(&file).readAll(); //! Читаем весь текст из файла
@@ -70,20 +67,13 @@ bool TleParser::loadFromFile(const QString &filePath)
         return true; //! Возвращаем true, если разбор успешен
     } else {
         //! Если разбор текста не удался, отправляем сигнал об ошибке
-        emit this->errorOccurred("Ошибка разбора TLE данных из файла!");
+        emit this->errorOccurred(tr("Ошибка разбора TLE данных из файла \"%1\.").arg(filePath));
         return false; //! Возвращаем false, если разбор не удался
     }
 }
 
 bool TleParser::loadFromUrl(const QUrl &url)
 {
-    // FIXME: ПОЧИНИТЬ ФУНКЦИЮ ЗАГРУЗКИ ИЗ СЕТИ
-    if (!url.isValid()) {
-        //! Если URL недействителен, отправляем сигнал об ошибке
-        emit this->errorOccurred("Неверный URL");
-        return false;
-    }
-
     //! Если уже есть незавершённый запрос — отменим
     if (this->currentReply_) {
         this->currentReply_->disconnect(this); //! Отсоединяем сигналы от текущего ответа
@@ -105,57 +95,75 @@ void TleParser::onNetworkReplyFinished()
     if (!this->currentReply_)
         return;
 
-    //! Проверяем, произошла ли ошибка при выполнении запроса
-    if (this->currentReply_->error() != QNetworkReply::NoError) {
-        //! Если ошибка есть, формируем сообщение об ошибке
-        QString errMsg = QString("Сетевая ошибка: %1").arg(this->currentReply_->errorString());
-        this->currentReply_->deleteLater(); //! Удаляем текущий ответ
-        this->currentReply_ = nullptr;      //! Обнуляем указатель на текущий ответ
-        emit errorOccurred(errMsg);         //! Отправляем сигнал об ошибке
+    QNetworkReply *reply = currentReply_;
+    currentReply_ = nullptr;
+    reply->deleteLater();
+
+    if (reply->error() != QNetworkReply::NoError) {
+        emit errorOccurred(tr("Сетевая ошибка: %1").arg(reply->errorString()));
         return;
     }
 
-    QByteArray bytes = this->currentReply_->readAll(); //! Читаем все данные из ответа
-    QString allText = QString::fromUtf8(bytes);        //! Преобразуем байты в строку
+    int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
+    if (statusCode != 200) {
+        emit errorOccurred(tr("Ошибка HTTP: %1").arg(statusCode));
+        return;
+    }
 
-    this->currentReply_->deleteLater(); //! Удаляем текущий ответ
-    this->currentReply_ = nullptr;      //! Обнуляем указатель на текущий ответ
+    QString contentType = reply->header(QNetworkRequest::ContentTypeHeader).toString();
+    if (!contentType.contains("text/plain", Qt::CaseInsensitive)) {
+        emit errorOccurred(tr("Неверный тип содержимого: %1").arg(contentType));
+        return;
+    }
 
-    this->records_.clear();   //! Очищаем предыдущие записи
-    this->parseText(allText); //! Разбираем текст на TLE записи
-    emit parsingFinished();   //! Отправляем сигнал о завершении разбора
+    QString text = QString::fromUtf8(reply->readAll());
+    if (text.trimmed().isEmpty()) {
+        emit errorOccurred(tr("Ответ от сервера пустой"));
+        return;
+    }
+
+    this->records_.clear();
+    if (!this->parseText(text)) {
+        emit this->errorOccurred(tr("Не удалось разобрать TLE данные"));
+        return;
+    }
+    emit parsingFinished();
 }
 
 bool TleParser::parseText(const QString &text)
 {
     //! Разбиваем текст на строки, пропуская пустые строки
-    const QStringList lines = text.split('\n', Qt::SkipEmptyParts);
+    const QStringList lines = text.split(QRegularExpression(R"(\r\n|\n|\r)"), Qt::SkipEmptyParts);
     int i = 0; //! Индекс для перебора строк
-    while (i + 1 < lines.size()) {
+    while (i < lines.size()) {
         //! Проверяем, что текущая строка начинается с '1 ' или '2 '
         QString nameLine, line1, line2;
         //! Проверка, что файл в формате 2LE или 3LE
-        if (lines[i].startsWith("1 ") || lines[i].startsWith("2 ")) {
-            //! 2LE формат
-            nameLine.clear();     //! Если имя не указано, оставляем пустым
-            line1 = lines[i];     //! Первая строка TLE
-            line2 = lines[i + 1]; //! Вторая строка TLE
-            i += 2;               //! Переходим к следующей паре строк
-        } else {
-            //! 3LE формат
-            nameLine = lines[i];                                       //! Имя спутника или объекта
-            line1 = (i + 1 < lines.size() ? lines[i + 1] : QString()); //! Первая строка TLE
-            line2 = (i + 2 < lines.size() ? lines[i + 2] : QString()); //! Вторая строка TLE
-            i += 3; //! Переходим к следующей паре строк
+
+        if (i + 2 < lines.size() && !lines[i].startsWith("1 ") && !lines[i].startsWith("2 ")) {
+            //! 3LE (с именем)
+            nameLine = lines[i].trimmed();
+            line1 = lines[i + 1].trimmed();
+            line2 = lines[i + 2].trimmed();
+            i += 3;
         }
 
+        else if (i + 1 < lines.size() && (lines[i].startsWith("1 ") || lines[i].startsWith("2 "))) {
+            //! 2LE (без имени)
+            nameLine.clear();
+            line1 = lines[i].trimmed();
+            line2 = lines[i + 1].trimmed();
+            i += 2;
+        } else
+            break;
+
         TleRecord rec; //! Создаем новую запись TLE
-        if (!parseSingleTle(nameLine, line1, line2, rec))
-            continue; //! Если разбор не удался, пропускаем эту пару строк
-        else
+        if (parseSingleTle(nameLine, line1, line2, rec)) {
+            rec.name = nameLine;
             this->records_.append(rec); //! Добавляем запись в список записей
+        }
     }
-    return !this->records_.isEmpty();
+    return !records_.isEmpty();
 }
 
 bool TleParser::parseSingleTle(const QString &nameLine,
@@ -187,35 +195,30 @@ bool TleParser::parseSingleTle(const QString &nameLine,
     outRecord.line1 = l1;      //! Записываем первую строку TLE
     outRecord.line2 = l2;      //! Записываем вторую строку TLE
 
-    outRecord.catalogNumber = m1.captured(2).toInt();    //! Записываем номер спутника
-    outRecord.classification = m1.captured(3).trimmed(); //! Записываем классификацию спутника
-    outRecord.yearLaunch = m1.captured(4)
-                               .toInt(); //! Записываем год запуска спутника (последние 2 цифры)
-    outRecord.numberLaunch = m1.captured(5).toInt();  //! Записываем номер запуска спутника
-    outRecord.launchPiece = m1.captured(6).trimmed(); //! Записываем часть запуска спутника
-    outRecord.epoch = m1.captured(7).toDouble();      //! Записываем эпоху спутника
-    //! Записываем первую производную от среднего движения
-    outRecord.meanMotionFirstDerivative = m1.captured(8).toDouble();
-    //! Записываем вторую производную от среднего движения
-    outRecord.meanMotionSecondDerivative = m1.captured(9).toDouble();
-    outRecord.brakingCoefficient = m1.captured(10).trimmed(); //! Записываем коэффициент торможения B*
-    outRecord.ephemerisType = m1.captured(11).toInt(); //! Записываем тип эфемерид (сейчас всегда 0)
-    outRecord.elementSetNumber = m1.captured(12).trimmed().toInt(); //! Записываем номер элемента
-    outRecord.checksum1 = m1.captured(13).toInt(); //! Записываем контрольную сумму из первой строки
+    outRecord.catalogNumber = m1.captured(2).toInt();
+    outRecord.classification = m1.captured(3).trimmed();
+    outRecord.yearLaunch = m1.captured(4).toInt();
+    outRecord.numberLaunch = m1.captured(5).toInt();
+    outRecord.launchPiece = m1.captured(6).trimmed();
+    outRecord.epoch = (m1.captured(7) + m1.captured(8)).toDouble();
+    outRecord.epochYearSuffix = m1.captured(7).toInt();
+    outRecord.epochTime = m1.captured(8).toDouble();
+    outRecord.meanMotionFirstDerivative = m1.captured(9).toDouble();
+    outRecord.meanMotionSecondDerivative = m1.captured(10).toDouble();
+    outRecord.brakingCoefficient = m1.captured(11).trimmed();
+    outRecord.ephemerisType = m1.captured(12).toInt();
+    outRecord.elementSetNumber = m1.captured(13).trimmed().toInt();
+    outRecord.checksum1 = m1.captured(14).toInt();
 
-    outRecord.inclination = m2.captured(3).toDouble(); //! Записываем наклонение спутника в градусах
-    //! Записываем долготу восходящего узла в градусах
+    outRecord.inclination = m2.captured(3).toDouble();
     outRecord.rightAscension = m2.captured(4).toDouble();
-    QString ecc = m2.captured(5); //! Записываем эксцентриситет спутника (без точки)
-    //! Записываем эксцентриситет в формате с точкой
+    QString ecc = m2.captured(5);
     outRecord.eccentricity = QString("0.%1").arg(ecc).toDouble();
-    outRecord.argPerigee = m2.captured(6).toDouble();  //! Записываем аргумент перигея в градусах
-    outRecord.meanAnomaly = m2.captured(7).toDouble(); //! Записываем среднюю аномалию в градусах
-    //! Записываем среднее движение в обращениях в день
+    outRecord.argPerigee = m2.captured(6).toDouble();
+    outRecord.meanAnomaly = m2.captured(7).toDouble();
     outRecord.meanMotion = m2.captured(8).toDouble();
-    //! Записываем номер витка на момент эпохи
     outRecord.revolutionNumberOfEpoch = m2.captured(9).toInt();
-    outRecord.checksum2 = m2.captured(10).toInt(); //! Записываем контрольную сумму из второй строки
+    outRecord.checksum2 = m2.captured(10).toInt();
     return true;
 }
 

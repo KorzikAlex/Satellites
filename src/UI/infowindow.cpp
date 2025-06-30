@@ -11,13 +11,6 @@
 #include "infowindow.hpp"
 #include "./ui_infowindow.h"
 
-void InfoWindow::showAbout()
-{
-    QMessageBox::about(this,
-                       tr("О программе"),
-                       tr("\"Спутники\" - это программа для работы с TLE-файлами."));
-}
-
 void InfoWindow::saveResults()
 {
     //! Открываем диалоговое окно для сохранения файла
@@ -30,13 +23,11 @@ void InfoWindow::saveResults()
         return;
 
     QFile file(filePath); //! Открываем файл для записи
+
     //! Проверяем, что файл успешно открыт
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         //! Если файл не удалось открыть, показываем сообщение об ошибке
-        this->ui_->statusLabel->setText(tr("Не удалось открыть файл для записи!"));
-        QTimer::singleShot(3000, this, [&]() {
-            this->ui_->statusLabel->clear(); //! Очищаем метку статуса через 3 секунды
-        });
+        emit errorOccurred(tr("Не удалось открыть файл для записи: %1").arg(filePath));
         return;
     }
 
@@ -45,7 +36,7 @@ void InfoWindow::saveResults()
     //! Записываем количество спутников
     out << tr("Количество спутников: %1\n").arg(this->records_.size());
     //! Записываем дату самого старого спутника
-    out << tr("Дата самого старого спутника: %1\n").arg(this->ui_->inputDateLabel->text());
+    out << tr("Дата самых старых данных: %1\n").arg(this->ui_->inputDateLabel->text());
 
     //! Записываем количество спутников в каждом году
     out << tr("Количество запусков по годам:\n");
@@ -62,14 +53,8 @@ void InfoWindow::saveResults()
         QString count = this->ui_->inclinationTableView->model()->index(i, 1).data().toString();
         out << tr("%1°: %2\n").arg(inclination, count);
     }
-
     file.close(); //! Закрываем файл после записи
-
-    //! Показываем сообщение об успешном сохранении
-    this->ui_->statusLabel->setText(tr("Результаты успешно сохранены в файл ") + filePath);
-    QTimer::singleShot(3000, this, [&]() {
-        this->ui_->statusLabel->clear(); //! Очищаем метку статуса через 3 секунды
-    });
+    this->statusBar()->showMessage(tr("Сохранено в файл: %1").arg(filePath), 2500);
 }
 
 void InfoWindow::copyResults()
@@ -77,6 +62,7 @@ void InfoWindow::copyResults()
     QClipboard *clipboard = QApplication::clipboard(); //! Получаем буфер обмена
     QString results;                                   //! Строка для хранения результатов
     //! Формируем текст результатов
+
     //! Добавляем количество спутников
     results += tr("Количество спутников: %1\n").arg(this->records_.size());
     //! Добавляем дату самого старых данных
@@ -98,31 +84,86 @@ void InfoWindow::copyResults()
     }
 
     clipboard->setText(results); //! Устанавливаем текст в буфер обмена
-
-    this->ui_->statusLabel->setText(tr("Информация скопирована в буфер обмена."));
-    QTimer::singleShot(3000, this, [&]() {
-        this->ui_->statusLabel->clear(); //! Очищаем метку статуса через 3 секунды
-    });
+    this->statusBar()->showMessage(tr("Скопировано!"), 2500);
 }
 
-InfoWindow::InfoWindow(const QList<TleRecord> &records, QWidget *parent)
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+void InfoWindow::changeEvent(QEvent *event)
+{
+    if (event->type() == QEvent::ThemeChange)
+        updateStyles();
+    QMainWindow::changeEvent(event);
+}
+
+void InfoWindow::updateStyles()
+{
+    //! Получаем текущую цветовую схему
+    const auto scheme = QGuiApplication::styleHints()->colorScheme();
+
+    const QString prefix = (scheme == Qt::ColorScheme::Dark ? QStringLiteral(":/dark_icons/")
+                                                            : QStringLiteral(":/light_icons/"));
+
+    const QString suffix = (scheme == Qt::ColorScheme::Dark ? QStringLiteral("_dark")
+                                                            : QStringLiteral("_light"));
+
+    auto applyIcon = [&](auto *obj, const QString &baseName, int size) {
+        const QString path = prefix + baseName + suffix + QLatin1Char('-') + QString::number(size)
+                             + QLatin1String(".svg");
+        obj->setIcon(QIcon(path));
+    };
+
+    applyIcon(this->ui_->fileOpenAction, QStringLiteral("upload"), 24);
+    applyIcon(this->ui_->urlOpenAction, QStringLiteral("cloud_download"), 24);
+    applyIcon(this->ui_->copyAction, QStringLiteral("copy_all"), 24);
+    applyIcon(this->ui_->saveAction, QStringLiteral("save"), 24);
+    applyIcon(this->ui_->aboutAction, QStringLiteral("info"), 24);
+
+    this->ui_->toolBar->setStyleSheet(R"(
+    QToolBar {
+        border: none;
+        background: transparent;
+    }
+    /* все кнопки в тулбаре */
+    QToolBar QToolButton,
+    QToolBar QToolButton:hover,
+    QToolBar QToolButton:pressed {
+        color: palette(windowText);
+    })");
+}
+#endif
+
+void InfoWindow::showError(const QString &message)
+{
+    QMessageBox::critical(this, tr("Ошибка"), message);
+}
+
+InfoWindow::InfoWindow(const QVector<TleRecord> &records, QWidget *parent)
     : QMainWindow(parent)
     , ui_(new Ui::InfoWindow)
     , records_(records)
 {
     this->ui_->setupUi(this); //! Инициализация пользовательского интерфейса
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+    this->updateStyles(); //! Обновление стилей приложения при смене темы
+#endif
     //! Установка заголовка окна
-    this->connect(this->ui_->aboutAction, &QAction::triggered, this, &InfoWindow::showAbout);
+    this->connect(this->ui_->aboutAction, &QAction::triggered, this, &InfoWindow::requestShowAbout);
 
-    //! Подключение слота для сохранения результатов к кнопке
-    connect(this->ui_->saveButton, &QPushButton::clicked, this, &InfoWindow::saveResults);
+    this->connect(this, &InfoWindow::errorOccurred, this, &InfoWindow::showError);
+
     //! Подключение слота для сохранения результатов к действию меню
-    connect(this->ui_->saveAction, &QAction::triggered, this, &InfoWindow::saveResults);
-    //! Подключение слота для копирования результатов к кнопке
-    connect(this->ui_->copyButton, &QPushButton::clicked, this, &InfoWindow::copyResults);
+    this->connect(this->ui_->saveAction, &QAction::triggered, this, &InfoWindow::saveResults);
     //! Подключение слота для копирования результатов к действию меню
-    connect(this->ui_->copyAction, &QAction::triggered, this, &InfoWindow::copyResults);
+    this->connect(this->ui_->copyAction, &QAction::triggered, this, &InfoWindow::copyResults);
+    //! Подключение слота для открытия локального файла к действию меню
+    this->connect(this->ui_->fileOpenAction,
+                  &QAction::triggered,
+                  this,
+                  &InfoWindow::requestOpenLocalFile);
+
+    //! Подключение слота для открытия URL к действию меню
+    this->connect(this->ui_->urlOpenAction, &QAction::triggered, this, &InfoWindow::requestOpenUrl);
 
     //! Установка количества спутников в метке
     this->ui_->inputCountLabel->setText(QString::number(records.size()));
@@ -130,13 +171,12 @@ InfoWindow::InfoWindow(const QList<TleRecord> &records, QWidget *parent)
     //! Находим самую старую дату
     QDateTime oldest = QDateTime::currentDateTime(); //! Текущая дата и время
     bool first = true;                               //! Флаг для первого элемента
-    for (const auto &record : this->records_) {
-        int intEpoch = int(record.epoch);      //! Целая часть эпохи
-        int yearSuffix = intEpoch / 1000;      //! Год (последние 2 цифры)
-        int day = intEpoch % 1000;             //! День года (от 1 до 366)
-        double frac = record.epoch - intEpoch; //! Дробная часть эпохи (доля дня)
-        //! Преобразование года в полный формат
-        int year = yearSuffix < 57 ? 2000 + yearSuffix : 1900 + yearSuffix;
+    for (const TleRecord &record : this->records_) {
+        int day = int(record.epochTime);
+        double frac = record.epochTime - day;
+        int year = record.epochYearSuffix < 57 ? 2000 + record.epochYearSuffix
+                                               : 1900 + record.epochYearSuffix;
+
         QDate date = QDate(year, 1, 1).addDays(day - 1); //! Создание даты из года и дня года
         //! Создание времени из дробной части эпохи
         QTime time = QTime(0, 0).addSecs(int(frac * 86400));
@@ -152,8 +192,9 @@ InfoWindow::InfoWindow(const QList<TleRecord> &records, QWidget *parent)
             first = false;
         }
     }
-
-    this->ui_->inputDateLabel->setText(oldest.toString("dd.MM.yyyy")); //! Установка даты в метку
+    qDebug() << oldest; //! Отладочный вывод даты
+    this->ui_->inputDateLabel->setText(
+        oldest.toString("dd.MM.yyyy hh:mm:ss")); //! Установка даты в метку
 
     QMap<int, int> launchesPerYear; //! Карта для хранения количества запусков по годам
     for (const auto &rec : records) {
