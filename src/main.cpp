@@ -10,7 +10,7 @@
  */
 #include <QApplication>
 
-#include "UI/mainwindow.hpp"
+#include "UI/MainWindow.hpp"
 
 /*!
  * \brief qMain функция приложения.

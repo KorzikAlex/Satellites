@@ -24,44 +24,8 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
-/*!
- * \brief Структура TleRecord
- * \details
- * Хранит данные одной записи TLE (Two-Line Element).
- */
-struct TleRecord
-{
-    //! Поля для хранения данных TLE:
-    QString name;  //! Заголовок (имя спутника или объекта)
-    QString line1; //! Первая строка TLE (начинается с '1 ')
-    QString line2; //! Вторая строка TLE (начинается с '2 ')
-
-    //! Поля из первой строки TLE:
-    int catalogNumber;      //! Номер спутника (из line1)
-    QString classification; //! Класс (например, 'U' — unclassified)
-    int yearLaunch;         //! Год запуска (последние 2 цифры года)
-    int numberLaunch;       //! Номер запуска (например, 001, 002 и т.д.)
-    QString launchPiece;    //! Часть запуска (например, 'A', 'B' и т.д.)
-    double epoch;           //! Эпоха в формате года + день года (например, 21234.12345678)
-    int epochYearSuffix;    //! Последние две цифры года эпохи (например, 21 для 2021 года)
-    double epochTime;       //! Дробная часть эпохи (доля дня, например, 0.12345678)
-    double meanMotionFirstDerivative;  //! Первая производная от среднего движения (rev/day^2)
-    double meanMotionSecondDerivative; //! Вторая производная от среднего движения (rev/day^3)
-    QString brakingCoefficient;        //! Коэффициент торможения B*
-    int ephemerisType;                 //! Тип эфемерид (обычно 0)
-    int elementSetNumber;              //! Номер элемента
-    int checksum1;                     //! Контрольная сумма (из line1)
-
-    //! Поля из второй строки TLE:
-    double inclination;          //! Наклонение (градусы)
-    double rightAscension;       //! Долгота восходящего узла (градусы)
-    double eccentricity;         //! Эксцентриситет (но без точки, например, "0006703" → 0.0006703)
-    double argPerigee;           //! Аргумент перигея (градусы)
-    double meanAnomaly;          //! Средняя аномалия (градусы)
-    double meanMotion;           //! Среднее движение (обращения в день)
-    int revolutionNumberOfEpoch; //! Номер обращения
-    int checksum2;               //! Контрольная сумма (из line2)
-};
+#include "TleRecord.hpp"
+#include "TleStatistics.hpp"
 
 /*!
  * \brief Класс TleParser

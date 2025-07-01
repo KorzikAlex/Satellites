@@ -15,22 +15,24 @@ include_directories("include" , "src")
 
 set(PROJECT_SOURCES
     src/main.cpp
-    src/UI/mainwindow.cpp
-    src/UI/mainwindow.hpp
-    src/UI/mainwindow.ui
+    src/UI/MainWindow.cpp
+    src/UI/MainWindow.hpp
+    src/UI/MainWindow.ui
     src/Utils/TleParser.hpp
     src/Utils/TleParser.cpp
     resources/icons/window.qrc
     resources/icons/icon.rc
-    src/UI/infowindow.cpp
-    src/UI/infowindow.hpp
-    src/UI/infowindow.ui
+    src/UI/InfoWindow.cpp
+    src/UI/InfoWindow.hpp
+    src/UI/InfoWindow.ui
 )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Satellites
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
+        src/Utils/TleRecord.hpp
+        src/Utils/TleStatistics.hpp
 
     )
 

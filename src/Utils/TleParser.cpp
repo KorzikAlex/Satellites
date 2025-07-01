@@ -20,7 +20,7 @@ TleParser::TleParser(QObject *parent)
 TleParser::~TleParser()
 {
     if (this->currentReply_)
-        this->currentReply_->deleteLater();
+        this->currentReply_->deleteLater(); //! Удаляем текущий ответ, если он существует
 }
 
 bool TleParser::loadFromFile(const QString &filePath)
@@ -33,17 +33,17 @@ bool TleParser::loadFromFile(const QString &filePath)
 
     //! Проверяем, существует ли файл
     if (!info.exists()) {
-        emit errorOccurred(tr("Файл \"%1\" не найден!").arg(filePath));
+        emit errorOccurred(tr("Файл %1 не найден").arg(filePath));
         return false;
     }
     //! Проверяем, является ли это файлом
     if (!info.isFile()) {
-        emit errorOccurred(tr("\"%1\" не является файлом!").arg(filePath));
+        emit errorOccurred(tr("%1 не является файлом").arg(filePath));
         return false;
     }
     //! Проверяем права доступа (на чтение)
     if (!info.isReadable()) {
-        emit errorOccurred(tr("Нет прав на чтение файла \"%1\"!").arg(filePath));
+        emit errorOccurred(tr("Нет прав на чтение файла %1").arg(filePath));
         return false;
     }
     QFile file(filePath); //! Открываем файл для чтения
@@ -51,7 +51,7 @@ bool TleParser::loadFromFile(const QString &filePath)
     //! Проверяем, является ли файл текстовым
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         //! Если файл не удалось открыть, отправляем сигнал об ошибке
-        emit this->errorOccurred(tr("Не удалось открыть файл \"%1\"").arg(filePath));
+        emit this->errorOccurred(tr("Не удалось открыть файл %1").arg(filePath));
         return false;
     }
 
@@ -67,7 +67,7 @@ bool TleParser::loadFromFile(const QString &filePath)
         return true; //! Возвращаем true, если разбор успешен
     } else {
         //! Если разбор текста не удался, отправляем сигнал об ошибке
-        emit this->errorOccurred(tr("Ошибка разбора TLE данных из файла \"%1\.").arg(filePath));
+        emit this->errorOccurred(tr("Ошибка разбора TLE данных из файла %1").arg(filePath));
         return false; //! Возвращаем false, если разбор не удался
     }
 }
@@ -86,7 +86,7 @@ bool TleParser::loadFromUrl(const QUrl &url)
     this->currentReply_ = this->networkManager_->get(request); //! Выполняем GET-запрос
     //! Подключаем слот для обработки завершения запроса
     connect(this->currentReply_, &QNetworkReply::finished, this, &TleParser::onNetworkReplyFinished);
-    return true;
+    return true; //! Возвращаем true, если запрос успешно отправлен
 }
 
 void TleParser::onNetworkReplyFinished()
@@ -95,12 +95,17 @@ void TleParser::onNetworkReplyFinished()
     if (!this->currentReply_)
         return;
 
-    QNetworkReply *reply = currentReply_;
-    currentReply_ = nullptr;
-    reply->deleteLater();
+    QNetworkReply *reply = this->currentReply_; //! Получаем текущий ответ
+    this->currentReply_ = nullptr;              //! Обнуляем указатель на текущий ответ
+    reply->deleteLater();                       //! Удаляем текущий ответ после обработки
 
     if (reply->error() != QNetworkReply::NoError) {
-        emit errorOccurred(tr("Сетевая ошибка: %1").arg(reply->errorString()));
+        if (reply->error() == QNetworkReply::UnknownNetworkError
+            || reply->error() == QNetworkReply::ProtocolUnknownError)
+            emit errorOccurred(
+                tr("Неподдерживаемый протокол в URL: %1").arg(reply->url().toString()));
+        else
+            emit errorOccurred(tr("Сетевая ошибка: %1").arg(reply->errorString()));
         return;
     }
 
@@ -118,13 +123,14 @@ void TleParser::onNetworkReplyFinished()
 
     QString text = QString::fromUtf8(reply->readAll());
     if (text.trimmed().isEmpty()) {
-        emit errorOccurred(tr("Ответ от сервера пустой"));
+        emit errorOccurred(tr("Ответ от сервера пустой."));
         return;
     }
 
     this->records_.clear();
+
     if (!this->parseText(text)) {
-        emit this->errorOccurred(tr("Не удалось разобрать TLE данные"));
+        emit this->errorOccurred(tr("Не удалось разобрать TLE данные."));
         return;
     }
     emit parsingFinished();
@@ -142,7 +148,7 @@ bool TleParser::parseText(const QString &text)
 
         if (i + 2 < lines.size() && !lines[i].startsWith("1 ") && !lines[i].startsWith("2 ")) {
             //! 3LE (с именем)
-            nameLine = lines[i].trimmed();
+            nameLine = lines[i];
             line1 = lines[i + 1].trimmed();
             line2 = lines[i + 2].trimmed();
             i += 3;
@@ -200,7 +206,6 @@ bool TleParser::parseSingleTle(const QString &nameLine,
     outRecord.yearLaunch = m1.captured(4).toInt();
     outRecord.numberLaunch = m1.captured(5).toInt();
     outRecord.launchPiece = m1.captured(6).trimmed();
-    outRecord.epoch = (m1.captured(7) + m1.captured(8)).toDouble();
     outRecord.epochYearSuffix = m1.captured(7).toInt();
     outRecord.epochTime = m1.captured(8).toDouble();
     outRecord.meanMotionFirstDerivative = m1.captured(9).toDouble();

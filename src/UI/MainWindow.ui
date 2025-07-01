@@ -35,7 +35,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../../resources/icons/window.qrc">
-    <normaloff>:/title_icon/icon.ico</normaloff>:/title_icon/icon.ico</iconset>
+    <normaloff>:/title_icons/icon.svg</normaloff>:/title_icons/icon.svg</iconset>
   </property>
   <property name="whatsThis">
    <string/>
@@ -79,7 +79,7 @@
       </property>
       <property name="icon">
        <iconset resource="../../resources/icons/window.qrc">
-        <normaloff>:/light_icons/upload_light-32.svg</normaloff>:/light_icons/upload_light-32.svg</iconset>
+        <normaloff>:/icons/upload_light-32.svg</normaloff>:/icons/upload_light-32.svg</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -125,7 +125,7 @@
       </property>
       <property name="icon">
        <iconset resource="../../resources/icons/window.qrc">
-        <normaloff>:/light_icons/cloud_download_light-32.svg</normaloff>:/light_icons/cloud_download_light-32.svg</iconset>
+        <normaloff>:/icons/cloud_download_light-32.svg</normaloff>:/icons/cloud_download_light-32.svg</iconset>
       </property>
       <property name="iconSize">
        <size>
@@ -160,39 +160,6 @@
     <bool>false</bool>
    </property>
   </widget>
-  <action name="fileAction">
-   <property name="icon">
-    <iconset resource="../../resources/icons/window.qrc">
-     <normaloff>:/light_icons/upload_light-24.svg</normaloff>:/light_icons/upload_light-24.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Загрузка из файла</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+O</string>
-   </property>
-  </action>
-  <action name="urlAction">
-   <property name="icon">
-    <iconset resource="../../resources/icons/window.qrc">
-     <normaloff>:/light_icons/cloud_download_light-24.svg</normaloff>:/light_icons/cloud_download_light-24.svg</iconset>
-   </property>
-   <property name="text">
-    <string>Загрузка из сети</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+N</string>
-   </property>
-  </action>
-  <action name="aboutAction">
-   <property name="icon">
-    <iconset resource="../../resources/icons/window.qrc">
-     <normaloff>:/light_icons/info_light-24.svg</normaloff>:/light_icons/info_light-24.svg</iconset>
-   </property>
-   <property name="text">
-    <string>О программе</string>
-   </property>
-  </action>
  </widget>
  <resources>
   <include location="../../resources/icons/window.qrc"/>

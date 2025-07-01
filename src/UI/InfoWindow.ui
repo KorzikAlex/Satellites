@@ -30,7 +30,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="../../resources/icons/window.qrc">
-    <normaloff>:/title_icon/icon.ico</normaloff>:/title_icon/icon.ico</iconset>
+    <normaloff>:/title_icons/icon.svg</normaloff>:/title_icons/icon.svg</iconset>
   </property>
   <property name="dockOptions">
    <set>QMainWindow::DockOption::AllowTabbedDocks|QMainWindow::DockOption::AnimatedDocks</set>
@@ -58,6 +58,9 @@
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+      <property name="textInteractionFlags">
+       <set>Qt::TextInteractionFlag::TextSelectableByMouse</set>
       </property>
      </widget>
     </item>
@@ -119,6 +122,9 @@
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
       </property>
+      <property name="textInteractionFlags">
+       <set>Qt::TextInteractionFlag::TextSelectableByMouse</set>
+      </property>
      </widget>
     </item>
     <item row="3" column="0" alignment="Qt::AlignmentFlag::AlignLeft">
@@ -140,6 +146,9 @@
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+      <property name="textInteractionFlags">
+       <set>Qt::TextInteractionFlag::TextSelectableByMouse</set>
       </property>
      </widget>
     </item>
@@ -196,10 +205,13 @@
        </font>
       </property>
       <property name="text">
-       <string>Количество спутников с разным наклонением орбиты:</string>
+       <string>Количество спутников по наклону:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+      <property name="textInteractionFlags">
+       <set>Qt::TextInteractionFlag::TextSelectableByMouse</set>
       </property>
      </widget>
     </item>
@@ -228,6 +240,9 @@
       <property name="wordWrap">
        <bool>false</bool>
       </property>
+      <property name="textInteractionFlags">
+       <set>Qt::TextInteractionFlag::TextSelectableByMouse</set>
+      </property>
      </widget>
     </item>
     <item row="5" column="0" alignment="Qt::AlignmentFlag::AlignLeft">
@@ -254,10 +269,13 @@
        <enum>QFrame::Shadow::Plain</enum>
       </property>
       <property name="text">
-       <string>Количество спутников по годам:</string>
+       <string>Количество запусков по годам:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+      </property>
+      <property name="textInteractionFlags">
+       <set>Qt::TextInteractionFlag::TextSelectableByMouse</set>
       </property>
      </widget>
     </item>
@@ -279,7 +297,7 @@
     <bool>false</bool>
    </property>
    <property name="allowedAreas">
-    <set>Qt::ToolBarArea::AllToolBarAreas</set>
+    <set>Qt::ToolBarArea::TopToolBarArea</set>
    </property>
    <property name="orientation">
     <enum>Qt::Orientation::Horizontal</enum>
@@ -310,10 +328,13 @@
   <action name="saveAction">
    <property name="icon">
     <iconset resource="../../resources/icons/window.qrc">
-     <normaloff>:/light_icons/save_light-24.svg</normaloff>:/light_icons/save_light-24.svg</iconset>
+     <normaloff>:/icons/save_light-24.svg</normaloff>:/icons/save_light-24.svg</iconset>
    </property>
    <property name="text">
     <string>Сохранить в файл</string>
+   </property>
+   <property name="toolTip">
+    <string>Ctrl+S</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -322,31 +343,16 @@
     <enum>Qt::ShortcutContext::WidgetShortcut</enum>
    </property>
   </action>
-  <action name="aboutAction">
-   <property name="checkable">
-    <bool>false</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="../../resources/icons/window.qrc">
-     <normaloff>:/light_icons/info_light-24.svg</normaloff>:/light_icons/info_light-24.svg</iconset>
-   </property>
-   <property name="text">
-    <string>О программе</string>
-   </property>
-   <property name="menuRole">
-    <enum>QAction::MenuRole::TextHeuristicRole</enum>
-   </property>
-   <property name="priority">
-    <enum>QAction::Priority::NormalPriority</enum>
-   </property>
-  </action>
   <action name="copyAction">
    <property name="icon">
     <iconset resource="../../resources/icons/window.qrc">
-     <normaloff>:/light_icons/copy_all_light-24.svg</normaloff>:/light_icons/copy_all_light-24.svg</iconset>
+     <normaloff>:/icons/copy_all_light-24.svg</normaloff>:/icons/copy_all_light-24.svg</iconset>
    </property>
    <property name="text">
     <string>Скопировать всё</string>
+   </property>
+   <property name="toolTip">
+    <string>Сtrl+Shift+C</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+C</string>
@@ -355,22 +361,31 @@
   <action name="fileOpenAction">
    <property name="icon">
     <iconset resource="../../resources/icons/window.qrc">
-     <normaloff>:/light_icons/upload_light-24.svg</normaloff>:/light_icons/upload_light-24.svg</iconset>
+     <normaloff>:/icons/upload_light-24.svg</normaloff>:/icons/upload_light-24.svg</iconset>
    </property>
    <property name="text">
     <string>Загрузка из файла</string>
    </property>
+   <property name="toolTip">
+    <string>Ctrl+O</string>
+   </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::TextHeuristicRole</enum>
    </property>
   </action>
   <action name="urlOpenAction">
    <property name="icon">
     <iconset resource="../../resources/icons/window.qrc">
-     <normaloff>:/light_icons/cloud_download_light-24.svg</normaloff>:/light_icons/cloud_download_light-24.svg</iconset>
+     <normaloff>:/icons/cloud_download_light-24.svg</normaloff>:/icons/cloud_download_light-24.svg</iconset>
    </property>
    <property name="text">
     <string>Загрузка из сети</string>
+   </property>
+   <property name="toolTip">
+    <string>Ctrl+N</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>

@@ -8,8 +8,8 @@
  * \copyright This project is released under the MIT License.
  * \date 2025
  */
-#ifndef MAINWINDOW_HPP
-#define MAINWINDOW_HPP
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
 #include <QEvent>
 #include <QFileDialog>
@@ -20,7 +20,7 @@
 #include <QStyleHints>
 
 #include "Utils/TleParser.hpp"
-#include "infowindow.hpp"
+#include "InfoWindow.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -58,47 +58,41 @@ public:
 
 public slots:
     /*!
-     * \brief openLocalFile
+     * \brief openLocalFile — слот для открытия локального файла
      * \details
      * Слот, который вызывается при выборе локального файла для открытия.
      */
     void openLocalFile();
 
     /*!
-     * \brief openUrl
+     * \brief openUrl — слот для ввода URL
      * \details
      * Слот, который вызывается при выборе URL для открытия.
      */
     void openUrl();
 
     /*!
-     * \brief showInfo
+     * \brief showError — слот для отображения сообщения об ошибке
      * \param message Сообщение, которое будет отображено в окне информации
      * \details
      * Слот, который отображает информацию о программе.
      */
     void showError(const QString &message);
 
-    /*!
-     * \brief showAbout - слот, который отображает информацию о программе
-     * \details
-     * Этот слот вызывается при выборе пункта меню "О программе".
-     */
-    void showAbout();
-
 protected:
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
-    //! Переопределение метода для обновления стилей при смене темы
+    /*!
+     * \brief changeEvent — функция для изменения типа событий
+     * \param event Указатель на объект события
+     * \details
+     * Этот метод переопределяет стандартное поведение каких-то событий.
+     * \warning На данный момент реализована только обработка события смены темы.
+     * Работает на версии Qt 6.5.0 и выше.
+     */
     void changeEvent(QEvent *event) override;
 #endif
 
 private:
-    /*!
-     * \brief ui_ — Указатель на объект пользовательского интерфейса
-     * Содержит все элементы управления, созданные в Qt Designer.
-     */
-    Ui::MainWindow *ui_;
-
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
     /*!
      * \brief updateStyles - обновляет стили приложения при смене темы
@@ -118,7 +112,26 @@ private:
      */
     void showInfoWindow(const QVector<TleRecord> &records);
 
+    /*!
+     * \brief bindActions - связывает действия с соответствующими слотами
+     * \details
+     * Этот метод подключает сигналы от элементов управления к слотам,
+     * чтобы обеспечить функциональность приложения.
+     */
+    void bindActions();
+
+    /*!
+     * \brief ui_ — Указатель на объект пользовательского интерфейса
+     * Содержит все элементы управления, созданные в Qt Designer.
+     */
+    Ui::MainWindow *ui_;
+
+    /*!
+     * \brief tleParser_ — Указатель на объект TleParser
+     * \details
+     * Этот объект используется для загрузки и обработки TLE-файлов.
+     */
     TleParser *tleParser_ = nullptr;
 };
 
-#endif // MAINWINDOW_HPP
+#endif // MAINWINDOW_H
