@@ -13,6 +13,7 @@
 
 #include <QDateTime>
 #include <QMap>
+#include <QTimeZone>
 #include <QVector>
 
 #include "TleRecord.hpp"
@@ -26,9 +27,9 @@
 struct TleStatistics
 {
     QString name;
-    QVector<TleRecord> records; //! Список записей TLE
+    QVector<TleRecord> records;                           //! Список записей TLE
     QDateTime oldestEpoch = QDateTime::currentDateTime(); //! Самая старая дата из записей TLE
-    QMap<int, int> launchesPerYear; //! Количество запусков спутников по годам
+    QMap<int, int> launchesPerYear;                       //! Количество запусков спутников по годам
     QMap<int, int> inclinationBins; //! Количество спутников в каждом диапазоне наклонения
 
     TleStatistics(const QVector<TleRecord> &recs)
