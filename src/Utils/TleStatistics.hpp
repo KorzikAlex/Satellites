@@ -66,7 +66,7 @@ private:
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
             QDateTime dt(date, time, Qt::UTC);
 #else
-            QDateTime dt(date, time, QTimeZone::UTC);
+            QDateTime dt(date, time, QTimeZone::utc());
 #endif
             if (first || dt < this->oldestEpoch) {
                 //! Если это первый элемент или дата меньше текущей самой старой даты
