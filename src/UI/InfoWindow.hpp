@@ -23,6 +23,7 @@
 #include <QStyleHints>
 #include <QTimer>
 #include <QToolBar>
+#include <QOperatingSystemVersion>
 
 #include "Utils/TleParser.hpp"
 

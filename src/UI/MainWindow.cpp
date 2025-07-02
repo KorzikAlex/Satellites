@@ -15,8 +15,13 @@
 void MainWindow::changeEvent(QEvent *event)
 {
     //! Обработка события смены темы
-    if (event->type() == QEvent::ThemeChange)
-        updateStyles();
+    if (event->type() == QEvent::ThemeChange) {
+        //! Определяем текущую ОС и версию
+        const auto os = QOperatingSystemVersion::current();
+        //! На Windows 10 (или ниже) тема не меняется, пропускаем изменения иконок
+        if (!(os.type() == QOperatingSystemVersionBase::OSType::Windows && os.majorVersion() == 10))
+            updateStyles();
+    }
     //! Вызов базовой реализации для обработки других событий
     QMainWindow::changeEvent(event);
 }
@@ -40,6 +45,7 @@ void MainWindow::updateStyles()
     for (auto &p : icons)
         p.first->setIcon(QIcon(QLatin1String(":/icons/") + p.second + suffix + "-32.svg"));
 }
+
 #endif
 
 void MainWindow::openLocalFile()

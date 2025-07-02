@@ -14,9 +14,16 @@
 #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
 void InfoWindow::changeEvent(QEvent *event)
 {
-    if (event->type() == QEvent::ThemeChange)
-        updateStyles();              //! Обновляем стили при смене темы
-    QMainWindow::changeEvent(event); //! Вызываем базовую реализацию для обработки других событий
+    //! Обработка события смены темы
+    if (event->type() == QEvent::ThemeChange) {
+        //! Определяем текущую ОС и версию
+        const auto os = QOperatingSystemVersion::current();
+        //! На Windows 10 (или ниже) тема не меняется, пропускаем изменения иконок
+        if (!(os.type() == QOperatingSystemVersionBase::OSType::Windows && os.majorVersion() == 10))
+            updateStyles();
+    }
+    //! Вызов базовой реализации для обработки других событий
+    QMainWindow::changeEvent(event);
 }
 
 void InfoWindow::updateStyles()

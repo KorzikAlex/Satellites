@@ -11,13 +11,7 @@
 #ifndef MAINWINDOW_HPP
 #define MAINWINDOW_HPP
 
-#include <QEvent>
-#include <QFileDialog>
-#include <QGuiApplication>
 #include <QInputDialog>
-#include <QMainWindow>
-#include <QMessageBox>
-#include <QStyleHints>
 
 #include "InfoWindow.hpp"
 
