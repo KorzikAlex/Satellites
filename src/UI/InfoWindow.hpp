@@ -8,12 +8,10 @@
  * \copyright This project is released under the MIT License.
  * \date 2025
  */
-#ifndef INFOWINDOW_H
-#define INFOWINDOW_H
+#ifndef INFOWINDOW_HPP
+#define INFOWINDOW_HPP
 
 #include <QClipboard>
-#include <QDate>
-#include <QDateTime>
 #include <QEvent>
 #include <QFileDialog>
 #include <QGuiApplication>
@@ -23,8 +21,6 @@
 #include <QMessageBox>
 #include <QStandardItemModel>
 #include <QStyleHints>
-#include <QTime>
-#include <QTimeZone>
 #include <QTimer>
 #include <QToolBar>
 
@@ -135,11 +131,25 @@ private:
      * с соответствующими слотами в классе InfoWindow.
      */
     void bindActions();
-
+    /*!
+     * \brief formattedResults - формирует текстовое представление результатов.
+     * \return Строка, содержащая отформатированные результаты.
+     */
     QString formattedResults() const;
 
+    /*!
+     * \brief modelFromMap - создает модель QAbstractItemModel из QMap.
+     * \param map QMap, содержащий данные для модели.
+     * \param headers Список заголовков для модели.
+     * \return Указатель на созданную модель.
+     * \details
+     * Этот метод создает модель из QMap, которая будет использоваться для отображения данных в таблице.
+     */
     QAbstractItemModel *modelFromMap(const QMap<int, int> &map, const QStringList &headers);
 
+    /*!
+     * \brief fillUiFromStats - заполняет пользовательский интерфейс данными из статистики.
+     */
     void fillUiFromStats();
 
     /*!
@@ -149,7 +159,12 @@ private:
      */
     Ui::InfoWindow *ui_;
 
+    /*!
+     * \brief stats_ Структура, содержащая статистику о спутниках.
+     * \details
+     * Содержит данные, такие как количество спутников, даты запусков и наклоны орбит и сам набор спутников.
+     */
     TleStatistics stats_;
 };
 
-#endif // INFOWINDOW_H
+#endif // INFOWINDOW_HPP

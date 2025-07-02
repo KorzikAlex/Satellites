@@ -1,5 +1,5 @@
 /*!
- * \file TleRecord.hpp
+ * \file TleStatisctics.hpp
  * \brief Заголовочный файл для структуры TleStatistics
  * \details
  * Этот файл содержит определение структуры TleStatistics,
@@ -11,8 +11,10 @@
 #ifndef TLESTATISTICS_HPP
 #define TLESTATISTICS_HPP
 
+#include <QDate>
 #include <QDateTime>
 #include <QMap>
+#include <QTime>
 #include <QTimeZone>
 #include <QVector>
 

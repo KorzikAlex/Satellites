@@ -1,5 +1,5 @@
 /*!
- * \file main.cpp
+ * \file TleParser.cpp
  * \brief Парсер TLE-файлов
  * \details
  * Этот файл содержит реализацию класса TleParser,
@@ -100,6 +100,7 @@ void TleParser::onNetworkReplyFinished()
     reply->deleteLater();                       //! Удаляем текущий ответ после обработки
 
     if (reply->error() != QNetworkReply::NoError) {
+        //! Если произошла ошибка при выполнении запроса, отправляем сигнал об ошибке
         if (reply->error() == QNetworkReply::UnknownNetworkError
             || reply->error() == QNetworkReply::ProtocolUnknownError)
             emit errorOccurred(
@@ -108,27 +109,28 @@ void TleParser::onNetworkReplyFinished()
             emit errorOccurred(tr("Сетевая ошибка: %1").arg(reply->errorString()));
         return;
     }
-
+    //! Проверяем, что ответ содержит HTTP статус 200 (OK)
     int statusCode = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
     if (statusCode != 200) {
         emit errorOccurred(tr("Ошибка HTTP: %1").arg(statusCode));
         return;
     }
-
+    //! Проверяем, что ответ содержит корректный тип содержимого
     QString contentType = reply->header(QNetworkRequest::ContentTypeHeader).toString();
     if (!contentType.contains("text/plain", Qt::CaseInsensitive)) {
         emit errorOccurred(tr("Неверный тип содержимого: %1").arg(contentType));
         return;
     }
-
+    //! Читаем данные ответа
     QString text = QString::fromUtf8(reply->readAll());
     if (text.trimmed().isEmpty()) {
         emit errorOccurred(tr("Ответ от сервера пустой."));
         return;
     }
 
-    this->records_.clear();
+    this->records_.clear(); //! Очищаем предыдущие записи
 
+    //! Пытаемся разобрать текст на TLE записи
     if (!this->parseText(text)) {
         emit this->errorOccurred(tr("Не удалось разобрать TLE данные."));
         return;
@@ -152,9 +154,8 @@ bool TleParser::parseText(const QString &text)
             line1 = lines[i + 1].trimmed();
             line2 = lines[i + 2].trimmed();
             i += 3;
-        }
-
-        else if (i + 1 < lines.size() && (lines[i].startsWith("1 ") || lines[i].startsWith("2 "))) {
+        } else if (i + 1 < lines.size()
+                   && (lines[i].startsWith("1 ") || lines[i].startsWith("2 "))) {
             //! 2LE (без имени)
             nameLine.clear();
             line1 = lines[i].trimmed();
@@ -164,10 +165,8 @@ bool TleParser::parseText(const QString &text)
             break;
 
         TleRecord rec; //! Создаем новую запись TLE
-        if (parseSingleTle(nameLine, line1, line2, rec)) {
-            rec.name = nameLine;
+        if (parseSingleTle(nameLine, line1, line2, rec))
             this->records_.append(rec); //! Добавляем запись в список записей
-        }
     }
     return !records_.isEmpty();
 }

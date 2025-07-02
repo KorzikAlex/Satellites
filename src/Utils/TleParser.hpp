@@ -10,21 +10,16 @@
 #ifndef TLEPARSER_HPP
 #define TLEPARSER_HPP
 
-#include <QDebug>
 #include <QFile>
 #include <QFileInfo>
 #include <QObject>
-#include <QPair>
 #include <QRegularExpression>
-#include <QString>
 #include <QStringList>
 #include <QTextStream>
 #include <QUrl>
-#include <QVector>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 
-#include "TleRecord.hpp"
 #include "TleStatistics.hpp"
 
 /*!
@@ -56,8 +51,21 @@ public:
      */
     QVector<TleRecord> records() const;
 
+    /*!
+     * \brief loadFromFile - загрузка TLE данных из файла
+     * \param filePath Путь к файлу, содержащему TLE данные
+     * \return true, если загрузка и разбор прошли успешно, иначе false
+     */
     bool loadFromFile(const QString &filePath);
 
+    /*!
+     * \brief loadFromUrl - загрузка TLE данных из URL
+     * \param url URL, откуда нужно загрузить TLE данные
+     * \return true, если загрузка и разбор прошли успешно, иначе false
+     * \details
+     * Этот метод выполняет асинхронный запрос к указанному URL,
+     * получает данные и вызывает разбор текста.
+     */
     bool loadFromUrl(const QUrl &url);
 
 signals:

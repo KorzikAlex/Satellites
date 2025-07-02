@@ -20,21 +20,30 @@ set(PROJECT_SOURCES
     src/UI/MainWindow.ui
     src/Utils/TleParser.hpp
     src/Utils/TleParser.cpp
+    src/Utils/TleRecord.hpp
+    src/Utils/TleStatistics.hpp
     resources/icons/window.qrc
     resources/icons/icon.rc
     src/UI/InfoWindow.cpp
     src/UI/InfoWindow.hpp
     src/UI/InfoWindow.ui
 )
+# Отключаем сборку shared-библиотек для всех
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libraries" FORCE)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Satellites
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        src/Utils/TleRecord.hpp
-        src/Utils/TleStatistics.hpp
-
     )
+# Путь к UCRT64-MSYS2 Qt6
+set(CMAKE_PREFIX_PATH "C:/msys64/ucrt64/qt6-static" CACHE PATH "Qt6 install prefix")
+
+# Опции линковщика для полного статик‑линка
+if(MINGW)
+    # статические либы рантайма libgcc/libstdc++
+    target_link_options(Satellites PRIVATE -static -static-libgcc -static-libstdc++)
+endif()
 
 # qt_add_translations(Satellites TS_FILES Satellites_en_US.ts)
 # Define target properties for Android with Qt 6 as:

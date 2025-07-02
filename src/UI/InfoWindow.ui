@@ -25,6 +25,9 @@
   <property name="contextMenuPolicy">
    <enum>Qt::ContextMenuPolicy::ActionsContextMenu</enum>
   </property>
+  <property name="acceptDrops">
+   <bool>false</bool>
+  </property>
   <property name="windowTitle">
    <string>Информация о спутниках</string>
   </property>

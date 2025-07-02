@@ -21,11 +21,13 @@ void InfoWindow::changeEvent(QEvent *event)
 
 void InfoWindow::updateStyles()
 {
+    //! Проверяем, темная ли тема
     bool dark = (QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark);
 
     //! Устанавливаем суффикс для иконок в зависимости от цветовой схемы
     QString suffix = dark ? QStringLiteral("_dark") : QStringLiteral("_light");
 
+    //! Устанавливаем иконки для действий в тулбаре
     QList<QPair<QAction *, QString>> actions = {
         {this->ui_->fileOpenAction, QLatin1String("upload")},
         {this->ui_->urlOpenAction, QLatin1String("cloud_download")},
@@ -33,9 +35,11 @@ void InfoWindow::updateStyles()
         {this->ui_->saveAction, QLatin1String("save")},
     };
 
+    //! Проходим по всем действиям и устанавливаем иконки
     for (auto &p : actions)
         p.first->setIcon(QIcon(QLatin1String(":/icons/") + p.second + suffix + "-24.svg"));
 
+    //! Устанавливаем стили для тулбара
     this->ui_->toolBar->setStyleSheet(R"(
     QToolBar {
         border: none;
@@ -47,39 +51,6 @@ void InfoWindow::updateStyles()
     })");
 }
 #endif
-
-QAbstractItemModel *InfoWindow::modelFromMap(const QMap<int, int> &map, const QStringList &headers)
-{
-    QStandardItemModel *model = new QStandardItemModel(this);
-    model->setHorizontalHeaderLabels(headers);
-    for (auto it = map.constBegin(); it != map.constEnd(); ++it)
-        model->appendRow({new QStandardItem(QString::number(it.key())),
-                          new QStandardItem(QString::number(it.value()))});
-    return model;
-}
-
-QString InfoWindow::formattedResults() const
-{
-    QString out; //! Строка для хранения отформатированных результатов
-    //! Добавляем количество спутников
-    out += tr("Количество спутников: %1\n").arg(this->stats_.records.size());
-    //! Добавляем дату самых старых данных
-    out += tr("Дата самых старых данных: %1\n").arg(this->ui_->inputDateLabel->text());
-    out += tr("Количество запусков по годам:\n"); //! Заголовок для количества запусков по годам
-    for (auto it = this->stats_.launchesPerYear.constBegin();
-         it != this->stats_.launchesPerYear.constEnd();
-         ++it)
-        out += tr("%1: %2\n").arg(it.key()).arg(it.value()); //! Добавляем количество запусков по годам
-    //! Заголовок для количества спутников по наклону
-    out += tr("Количество спутников по наклону:\n");
-    for (auto it = this->stats_.inclinationBins.constBegin();
-         it != stats_.inclinationBins.constEnd();
-         ++it)
-        out += tr("%1°: %2\n")
-                   .arg(it.key())
-                   .arg(it.value()); //! Добавляем количество спутников по наклону
-    return out;
-}
 
 void InfoWindow::saveResults()
 {
@@ -114,8 +85,49 @@ void InfoWindow::saveResults()
 
 void InfoWindow::copyResults()
 {
-    QApplication::clipboard()->setText(formattedResults());
+    //! Копируем отформатированные результаты в буфер обмена
+    QApplication::clipboard()->setText(this->formattedResults());
+    //! Показываем сообщение о копировании в статусной строке
     this->statusBar()->showMessage(tr("Скопировано!"), 2500);
+}
+
+QString InfoWindow::formattedResults() const
+{
+    QString out; //! Строка для хранения отформатированных результатов
+    //! Добавляем количество спутников
+    out += tr("Количество спутников: %1\n").arg(this->stats_.records.size());
+    //! Добавляем дату самых старых данных
+    out += tr("Дата самых старых данных: %1\n").arg(this->ui_->inputDateLabel->text());
+    out += tr("Количество запусков по годам:\n"); //! Заголовок для количества запусков по годам
+    for (auto it = this->stats_.launchesPerYear.constBegin();
+         it != this->stats_.launchesPerYear.constEnd();
+         ++it)
+        out += tr("%1: %2\n").arg(it.key()).arg(it.value()); //! Добавляем количество запусков по годам
+    //! Заголовок для количества спутников по наклону
+    out += tr("Количество спутников по наклону:\n");
+    for (auto it = this->stats_.inclinationBins.constBegin();
+         it != stats_.inclinationBins.constEnd();
+         ++it)
+        out += tr("%1°: %2\n")
+                   .arg(it.key())
+                   .arg(it.value()); //! Добавляем количество спутников по наклону
+    return out;
+}
+
+QAbstractItemModel *InfoWindow::modelFromMap(const QMap<int, int> &map, const QStringList &headers)
+{
+    QStandardItemModel *model = new QStandardItemModel(this); //! Создаем новую модель
+    model->setHorizontalHeaderLabels(headers);                //! Устанавливаем заголовки для модели
+    //! Заполняем модель данными из QMap
+    for (auto it = map.constBegin(); it != map.constEnd(); ++it)
+        model->appendRow({new QStandardItem(QString::number(it.key())),
+                          new QStandardItem(QString::number(it.value()))});
+    return model; //! Возвращаем указатель на созданную модель
+}
+
+void InfoWindow::showError(const QString &message)
+{
+    QMessageBox::critical(this, tr("Ошибка"), message); //! Отображение сообщения об ошибке в окне
 }
 
 void InfoWindow::bindActions()
@@ -136,10 +148,6 @@ void InfoWindow::bindActions()
     //! Подключение слота для открытия URL к действию меню
     this->connect(this->ui_->urlOpenAction, &QAction::triggered, this, &InfoWindow::requestOpenUrl);
 }
-void InfoWindow::showError(const QString &message)
-{
-    QMessageBox::critical(this, tr("Ошибка"), message); //! Отображение сообщения об ошибке в окне
-}
 
 void InfoWindow::fillUiFromStats()
 {
@@ -149,12 +157,14 @@ void InfoWindow::fillUiFromStats()
     //! Установка даты и времени в метку
     this->ui_->inputDateLabel->setText(this->stats_.oldestEpoch.toString("dd.MM.yyyy hh:mm:ss"));
 
+    //! Установка моделей для таблиц с данными
     this->ui_->yearTableView->setModel(
         this->modelFromMap(this->stats_.launchesPerYear, {tr("Год"), tr("Число запусков")}));
     this->ui_->inclinationTableView->setModel(
         this->modelFromMap(this->stats_.inclinationBins,
                            {tr("Наклонение (°)"), tr("Число запусков")}));
 
+    //! Установка выравнивание заголовков таблиц
     this->ui_->yearTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     this->ui_->inclinationTableView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }

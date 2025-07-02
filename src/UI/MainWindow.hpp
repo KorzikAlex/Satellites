@@ -8,8 +8,8 @@
  * \copyright This project is released under the MIT License.
  * \date 2025
  */
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef MAINWINDOW_HPP
+#define MAINWINDOW_HPP
 
 #include <QEvent>
 #include <QFileDialog>
@@ -19,7 +19,6 @@
 #include <QMessageBox>
 #include <QStyleHints>
 
-#include "Utils/TleParser.hpp"
 #include "InfoWindow.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -134,4 +133,4 @@ private:
     TleParser *tleParser_ = nullptr;
 };
 
-#endif // MAINWINDOW_H
+#endif // MAINWINDOW_HPP
